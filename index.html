@@ -1,9 +1,460 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="ko">
 <head>
-<title>SSR</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="SSR Mercury Robotics — AI · Robotics · Automation" />
+  <title>SSR | Mercury Robotics</title>
+
+  <style>
+    :root {
+      --ssr-blue: #1557bd;
+      --ssr-deep: #07162f;
+      --gold: #b99a55;
+      --white: #ffffff;
+      --line: rgba(255,255,255,.22);
+      --header-height: 78px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Arial, "Noto Sans KR", sans-serif;
+      color: #111;
+      background: #fff;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+
+    /* 상단 알림 바 */
+    .notice {
+      min-height: 42px;
+      padding: 0 5vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      color: #fff;
+      background: var(--ssr-blue);
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .notice a {
+      border-bottom: 1px solid rgba(255,255,255,.7);
+      margin-left: 10px;
+      font-weight: 500;
+    }
+
+    /* 히어로 */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      isolation: isolate;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(4,13,30,.64) 0%, rgba(4,13,30,.25) 42%, rgba(4,13,30,.06) 75%),
+        url("assets/ssr-hero.jpg") center center / cover no-repeat;
+    }
+
+    /* PC 화면에서는 원본 구도를 최대한 유지 */
+    @media (min-width: 1100px) {
+      .hero {
+        background-position: center center;
+      }
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 28%;
+      background: linear-gradient(transparent, rgba(3,10,24,.55));
+      z-index: -1;
+    }
+
+    /* 내비게이션 */
+    .site-header {
+      height: var(--header-height);
+      padding: 0 5vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      color: #fff;
+      border-bottom: 1px solid var(--line);
+      background: rgba(5,15,34,.28);
+      backdrop-filter: blur(8px);
+      position: relative;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: max-content;
+    }
+    .brand-mark {
+      font-size: 31px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -3px;
+      color: #fff;
+    }
+    .brand-mark span { color: #91b8ff; }
+    .brand-copy small {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 1.4px;
+      opacity: .76;
+    }
+    .brand-copy strong {
+      display: block;
+      font-size: 14px;
+      letter-spacing: .5px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(18px, 2.4vw, 38px);
+      margin-left: auto;
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .nav a {
+      position: relative;
+      padding: 29px 0 25px;
+      white-space: nowrap;
+    }
+    .nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 18px;
+      width: 0;
+      height: 2px;
+      background: #fff;
+      transition: width .25s ease;
+    }
+    .nav a:hover::after { width: 100%; }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: max-content;
+    }
+    .outline-btn {
+      border: 1px solid rgba(255,255,255,.65);
+      color: #fff;
+      background: rgba(0,0,0,.12);
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+    .menu-btn {
+      width: 42px;
+      height: 42px;
+      border: 0;
+      color: #fff;
+      background: transparent;
+      font-size: 25px;
+      cursor: pointer;
+    }
+
+    /* 메인 카피 */
+    .hero-content {
+      min-height: calc(100vh - var(--header-height) - 42px);
+      padding: 7vh 7vw 9vh;
+      display: flex;
+      align-items: center;
+    }
+
+    .copy {
+      width: min(620px, 48vw);
+      margin-top: 4vh;
+      color: #fff;
+      text-shadow: 0 3px 22px rgba(0,0,0,.35);
+    }
+    .eyebrow {
+      margin: 0 0 18px;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      color: #bcd4ff;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(40px, 5.1vw, 78px);
+      line-height: .98;
+      letter-spacing: -3px;
+      font-weight: 900;
+    }
+    h1 span {
+      display: block;
+      margin-top: 12px;
+      font-size: .56em;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      font-weight: 700;
+    }
+    .lead {
+      max-width: 540px;
+      margin: 25px 0 0;
+      font-size: clamp(15px, 1.2vw, 18px);
+      line-height: 1.75;
+      color: rgba(255,255,255,.88);
+    }
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 31px;
+    }
+    .cta {
+      min-width: 150px;
+      padding: 14px 20px;
+      border: 1px solid rgba(255,255,255,.72);
+      color: #fff;
+      background: rgba(3,12,28,.28);
+      font-weight: 800;
+      text-align: center;
+      transition: .2s ease;
+    }
+    .cta.primary {
+      border-color: var(--ssr-blue);
+      background: var(--ssr-blue);
+    }
+    .cta:hover {
+      transform: translateY(-2px);
+      background: #fff;
+      border-color: #fff;
+      color: var(--ssr-deep);
+    }
+
+    .scroll-guide {
+      position: absolute;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,.82);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-align: center;
+    }
+    .scroll-guide::after {
+      content: "";
+      display: block;
+      width: 1px;
+      height: 34px;
+      margin: 9px auto 0;
+      background: rgba(255,255,255,.65);
+    }
+
+    /* 아래 섹션 뼈대 */
+    .section {
+      padding: 105px 7vw;
+    }
+    .section:nth-of-type(even) { background: #f5f7fa; }
+    .section-label {
+      margin: 0 0 12px;
+      color: var(--ssr-blue);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 3px;
+    }
+    .section h2 {
+      margin: 0 0 24px;
+      font-size: clamp(31px, 4vw, 54px);
+      letter-spacing: -2px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 22px;
+      margin-top: 42px;
+    }
+    .card {
+      min-height: 220px;
+      padding: 28px;
+      border: 1px solid #dde3eb;
+      background: #fff;
+    }
+    .card b {
+      display: block;
+      margin-bottom: 15px;
+      font-size: 22px;
+    }
+    .card p {
+      margin: 0;
+      line-height: 1.7;
+      color: #5e6774;
+    }
+
+    footer {
+      padding: 38px 7vw;
+      color: rgba(255,255,255,.72);
+      background: #071326;
+      font-size: 13px;
+    }
+
+    /* 모바일 */
+    @media (max-width: 980px) {
+      .nav, .outline-btn { display: none; }
+
+      .hero {
+        background-position: 58% center;
+      }
+      .hero-content {
+        align-items: flex-end;
+        padding-bottom: 110px;
+      }
+      .copy {
+        width: min(620px, 100%);
+      }
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .notice {
+        padding: 10px 20px;
+        align-items: flex-start;
+        font-size: 12px;
+      }
+      .notice span:last-child { display: none; }
+
+      .site-header { padding: 0 20px; }
+      .brand-copy { display: none; }
+
+      .hero {
+        min-height: 820px;
+        background-position: 62% center;
+      }
+      .hero-content {
+        min-height: 700px;
+        padding: 40px 22px 80px;
+      }
+      h1 { letter-spacing: -2px; }
+      .lead { max-width: 92%; }
+      .hero-cta { gap: 8px; }
+      .cta { min-width: 132px; padding: 12px 15px; }
+      .section { padding: 72px 22px; }
+    }
+  </style>
 </head>
+
 <body>
-<h1>SSR 홈페이지 공사중</h1>
+  <div class="notice">
+    <div>
+      SSR AI Manufacturing Platform
+      <a href="#contact">프로젝트 문의하기</a>
+    </div>
+    <span>Mercury Robotics · Daegu, Korea</span>
+  </div>
+
+  <main class="hero" id="home">
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="SSR 홈">
+        <div class="brand-mark">SS<span>R★</span></div>
+        <div class="brand-copy">
+          <strong>Mercury Robotics</strong>
+          <small>AI · ROBOTICS · AUTOMATION</small>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="주요 메뉴">
+        <a href="#about">회사소개</a>
+        <a href="#solution">사업영역</a>
+        <a href="#mercare">MERCARE</a>
+        <a href="#project">프로젝트</a>
+        <a href="#support">정부지원사업</a>
+        <a href="#contact">고객지원</a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="outline-btn" href="#contact">디지털 견적 →</a>
+        <button class="menu-btn" type="button" aria-label="전체 메뉴">☰</button>
+      </div>
+    </header>
+
+    <div class="hero-content">
+      <section class="copy">
+        <p class="eyebrow">MERCURY ROBOTICS</p>
+        <h1>
+          AUTOMATION
+          <span>From Robot to AI Platform</span>
+        </h1>
+        <p class="lead">
+          SSR은 로봇, PLC, 비전, 데이터와 AI를 연결하여
+          제조 현장이 실제로 사용할 수 있는 자동화 생태계를 구축합니다.
+        </p>
+        <div class="hero-cta">
+          <a class="cta primary" href="#solution">사업영역 보기</a>
+          <a class="cta" href="#project">프로젝트 보기</a>
+          <a class="cta" href="#mercare">MERCARE</a>
+        </div>
+      </section>
+    </div>
+
+    <a class="scroll-guide" href="#about">SCROLL</a>
+  </main>
+
+  <section class="section" id="about">
+    <p class="section-label">ABOUT SSR</p>
+    <h2>기술을 만드는 것보다<br>기술을 연결해 가치를 만듭니다.</h2>
+    <div class="grid">
+      <article class="card"><b>20+ Years</b><p>제조 자동화, 로봇 SI, 전기·제어, 시운전 경험.</p></article>
+      <article class="card"><b>Multi Robot</b><p>Yaskawa, FANUC, Hyundai, ABB, Kawasaki 등 다양한 로봇 대응.</p></article>
+      <article class="card"><b>Field Integration</b><p>PLC, HMI, Vision, Sensor, AI 플랫폼을 현장에 통합.</p></article>
+    </div>
+  </section>
+
+  <section class="section" id="solution">
+    <p class="section-label">SOLUTIONS</p>
+    <h2>AI · Robotics · Automation</h2>
+    <div class="grid">
+      <article class="card"><b>Robot Automation</b><p>주조, 팔레타이징, 도장, 조립, 검사 공정 자동화.</p></article>
+      <article class="card"><b>Smart Manufacturing</b><p>설비 데이터 수집, 대시보드, 생산정보 연계.</p></article>
+      <article class="card"><b>AI Integration</b><p>검증된 AI 플랫폼을 제조 현장에 적용하는 SI 서비스.</p></article>
+    </div>
+  </section>
+
+  <section class="section" id="mercare">
+    <p class="section-label">MERCARE</p>
+    <h2>Robot Care Subscription</h2>
+    <div class="grid">
+      <article class="card"><b>Predict</b><p>로봇 상태와 이상 징후를 데이터로 관리합니다.</p></article>
+      <article class="card"><b>Prevent</b><p>고장 전 점검과 부품 교체 판단을 지원합니다.</p></article>
+      <article class="card"><b>Support</b><p>계약 기간 동안 긴급 점검과 기술지원을 제공합니다.</p></article>
+    </div>
+  </section>
+
+  <section class="section" id="project">
+    <p class="section-label">PROJECT</p>
+    <h2>주요 프로젝트 영역</h2>
+    <div class="grid">
+      <article class="card"><b>Automotive</b><p>자동차 부품, 주조, 검사 및 후공정 자동화.</p></article>
+      <article class="card"><b>Factory Automation</b><p>산업용 로봇 기반 자동화 라인 설계 및 구축.</p></article>
+      <article class="card"><b>Government Project</b><p>AI·스마트제조 지원사업 기술 수행 및 제안 협업.</p></article>
+    </div>
+  </section>
+
+  <section class="section" id="support">
+    <p class="section-label">GOVERNMENT SUPPORT</p>
+    <h2>정부지원사업 기술 파트너</h2>
+    <p>수요기업의 공정 문제를 자동화 구조로 구체화하고, 수행 가능한 기술 범위를 설계합니다.</p>
+  </section>
+
+  <section class="section" id="contact">
+    <p class="section-label">CONTACT</p>
+    <h2>프로젝트를 시작합니다.</h2>
+    <p>대구광역시 · ssr.ai.kr · Mercury Robotics</p>
+  </section>
+
+  <footer>
+    © 2026 SSR Co., Ltd. Mercury Robotics. All rights reserved.
+  </footer>
 </body>
 </html>
