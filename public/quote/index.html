@@ -1,0 +1,252 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>상세 견적서 작성 프로그램</title><style>
+*{box-sizing:border-box}body{margin:0;background:#eef1f5;color:#202936;font:14px 'Malgun Gothic','Apple SD Gothic Neo',sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer;border:1px solid #c5cfdb;border-radius:6px;padding:9px 13px;background:white}button:hover{background:#ecf3fa}.primary{background:#174b7d;color:white;border-color:#174b7d}.primary:hover{background:#123a61}.wrap{max-width:1150px;margin:22px auto;padding:0 18px}.bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:15px}.bar h1{font-size:22px;margin:0}.actions{display:flex;gap:7px;flex-wrap:wrap}.card{background:white;border:1px solid #dce3eb;border-radius:10px;padding:20px 24px;margin-bottom:14px}.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:13px}.sectionhead h2{font-size:17px;margin:0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 22px}.field{display:flex;align-items:center;gap:8px;min-width:0}.field>label{width:108px;flex-shrink:0;font-weight:650;font-size:12px}.field input,.field textarea,.field select{min-width:0;width:100%;padding:8px;border:1px solid #cbd6e1;border-radius:5px;background:white;color:#1c2939}.wide{grid-column:1/-1}.wide textarea{min-height:76px;resize:vertical}.hint{color:#606d7e;font-size:12px;line-height:1.6}.tableouter{overflow-x:auto}table.edit{width:100%;border-collapse:collapse;min-width:780px;font-size:12px}table.edit th{background:#e9eff5;padding:9px 5px;border:1px solid #ccd7df}table.edit td{padding:5px;border:1px solid #dbe3e9}table.edit input{width:100%;border:1px solid #cbd7e2;border-radius:4px;padding:7px 5px;min-width:0}table.edit input[type=number]{text-align:right}table.edit .amount{text-align:right;font-weight:700;white-space:nowrap}.mini{padding:5px 9px;font-size:12px}.remove{color:#af3030}.group{border:1px solid #cbd7e2;border-radius:7px;margin-top:13px;overflow:hidden}.groupheader{background:#f4f6f8;padding:9px 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}.groupheader input{width:min(340px,100%);min-width:100px;padding:7px;border:1px solid #cbd7e2;border-radius:4px}.groupheader .total{margin-left:auto;font-weight:800;color:#174b7d}.groupbody{padding:12px}.stats{display:flex;gap:20px;flex-wrap:wrap;justify-content:end;font-size:14px}.stats strong{color:#174b7d}.check{display:flex;gap:7px;align-items:center}.check input{width:17px;height:17px}.status{min-height:22px;color:#17633f}.hiddenfile{display:none}.sellerlocked input:not([type=file]){background:#f1f4f7;color:#425168}.modeinfo{font-size:12px;color:#39516c;margin:8px 0}.sellerlocked #logoFile,.sellerlocked #clearLogo,.sellerlocked #stampFile,.sellerlocked #clearStamp{display:none}
+#printArea{display:none}.p-sheet{width:190mm;min-height:267mm;background:#fff;color:#111;padding:0 0 6mm;margin:0 auto;position:relative;break-after:page;page-break-after:always;font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif}.p-sheet:last-child{break-after:auto;page-break-after:auto}.p-frame{border:1.5px solid #222;min-height:246mm}.p-title{text-align:center;font-family:serif;font-weight:900;font-size:27px;letter-spacing:10px;margin:2mm 0}.p-top{display:flex;border-bottom:1px solid #222;min-height:57mm}.p-intro{width:57%;padding:7mm 3mm 3mm;font-size:11px;line-height:2.3}.p-seller{width:43%;padding:5mm 3mm;text-align:center;line-height:1.7;font-size:10px}.p-logo{font-size:26px;font-weight:900;color:#234e81;word-break:break-word}.p-table{border-collapse:collapse;width:100%;table-layout:fixed;font-size:10px}.p-table td,.p-table th{border:1px solid #252525;padding:3px 4px;word-break:break-word}.p-table th{background:#dceef3;font-weight:800;text-align:center}.p-table .num{text-align:right}.p-table .center{text-align:center}.p-table .label{background:#f0f0f0;font-weight:800;text-align:center}.p-table .sum{background:#ebf4ea;font-weight:800}.p-terms{display:flex;min-height:37mm;border-top:1px solid #222;font-size:11px}.p-terms-label{width:25%;border-right:1px solid #222;display:grid;place-items:center}.p-terms-text{padding:5mm;white-space:pre-wrap;line-height:1.85;flex:1}.p-foot{text-align:center;font-size:10px;color:#4c4c4c;margin-top:5mm}.p-cover{display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:42mm 10mm 22mm;text-align:center}.p-cover .recipient{font-size:22px;font-family:serif;letter-spacing:2px}.p-cover .ctitle{font-family:serif;font-size:52px;font-weight:800;letter-spacing:15px;margin:30mm 0}.p-cover .project{font-size:17px}.p-cover .date{font-size:17px;margin-top:25mm}.p-cover .seller{font-size:24px;font-weight:800;margin-top:auto}.p-detail-title{text-align:center;font-size:20px;font-weight:800;padding:4mm 0}.p-detail-group{background:#fff200!important;font-weight:800}.p-detail-subtotal{background:#95d654!important;font-weight:800}.detailrow td{height:6mm}.p-note{font-size:11px;white-space:pre-wrap}.p-summarytable tbody tr td{height:6.6mm}.p-details table{font-size:9px}.p-details td,.p-details th{padding:2px 3px}.p-empty{color:#888}.p-logo-image{max-width:42mm;max-height:19mm;object-fit:contain;display:block;margin:0 auto 2mm}.p-seller-logo{height:20mm;display:flex;align-items:center;justify-content:center}.p-representative{display:flex;justify-content:center;align-items:center;gap:2mm;min-height:16mm;white-space:nowrap}.p-stamp-anchor{position:relative;display:inline-flex;align-items:center;justify-content:center;width:13mm;height:13mm;font-size:11px}.p-stamp-image{position:absolute;width:18mm;height:18mm;max-width:none;object-fit:contain;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}.p-company-name{font-weight:800;font-size:12px}.labelpill{font-size:11px;background:#e3e9f1;border-radius:6px;padding:3px 7px}
+@media(max-width:750px){.wrap{padding:0 9px}.card{padding:15px}.grid{grid-template-columns:1fr}.wide{grid-column:auto}.bar h1{font-size:19px}.field>label{width:94px}}
+@page{size:A4 portrait;margin:15mm 10mm 13mm}
+
+/* 인쇄용 견적 요약: 페이지당 20개 번호를 출력하고 특이사항은 마지막 페이지 하단에 배치 */
+.p-summary-frame{display:flex;flex-direction:column;height:246mm;min-height:246mm;overflow:hidden}
+.p-summary-frame .p-top,.p-summary-frame>.p-table,.p-summary-frame>.p-detail-title{flex-shrink:0}
+.p-summary-fill{flex:1 1 auto;min-height:0;display:flex}
+.p-summary-fill .p-summarytable{height:100%;width:100%}
+.p-summarytable th{height:4.6mm;padding:2px 3px}
+.p-summarytable .p-item-row td,.p-summarytable .p-blank-row td{height:4.7mm;padding:1px 3px;line-height:1.1}
+.p-summarytable .p-total-row td{height:4.7mm;padding:1px 3px}
+.p-summary-frame .p-terms{flex:0 0 32mm;min-height:32mm;margin-top:auto;border-top:1px solid #222}
+.p-summarytable .p-blank-row td{color:#111}
+.p-summary-frame .p-table{font-size:9px}
+.p-summary-frame .p-top{min-height:53mm}
+.p-summary-frame .p-intro{padding-top:5mm;padding-bottom:2mm}
+.p-summary-frame .p-seller{padding-top:3mm;padding-bottom:2mm}
+.p-summarytable .p-item-row td{overflow-wrap:anywhere}
+
+.qty-control{display:flex;gap:3px;align-items:center}.qty-control input{flex:1;min-width:0}.qty-control button{padding:5px 7px;font-size:11px;white-space:nowrap}.p-amount-words{margin-top:2.7mm;font-size:13px;line-height:1.6;color:#111;letter-spacing:0;word-break:keep-all}.p-amount-number{font-weight:900;font-size:13px}.p-amount-korean{font-weight:850;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}.p-amount-vat{font-size:11px;font-weight:700;white-space:nowrap}.p-summary-frame .p-intro{line-height:1.85}
+@media print{body{margin:0;background:white;-webkit-print-color-adjust:exact;print-color-adjust:exact}.wrap{display:none!important}#printArea{display:block!important}.p-sheet{width:190mm;min-height:267mm;max-height:267mm;overflow:hidden}.p-sheet:last-child{break-after:auto}.p-frame{min-height:246mm}.p-summary-frame{height:246mm}}
+</style></head><body><div class="wrap"><div class="bar"><h1>견적서 작성 프로그램 <span class="labelpill">Ver.1.0 Program by SSR</span></h1><div class="actions"><button id="newBtn">새 견적서</button><button id="saveBtn">내용 저장</button><button id="loadBtn">불러오기</button><input id="loadFile" class="hiddenfile" type="file" accept=".json"><button id="printBtn" class="primary">PDF 저장 / 출력</button></div></div>
+<section class="card"><div class="sectionhead"><h2>① 견적 기본정보</h2></div><div class="grid">
+<div class="field"><label>고객사명</label><input data-field="client" placeholder="예: 주식회사 에스에스알"></div><div class="field"><label>고객 담당자</label><input data-field="clientPerson"></div><div class="field"><label>고객 연락처</label><input data-field="clientPhone"></div><div class="field"><label>고객 FAX</label><input data-field="clientFax"></div><div class="field"><label>프로젝트명</label><input data-field="project" placeholder="예: 자동화 설비 구축"></div><div class="field"><label>견적 일련번호</label><input data-field="quoteNo"></div><div class="field"><label>견적일</label><input type="date" data-field="quoteDate"></div><div class="field"><label>유효기간</label><input type="date" data-field="validUntil"></div><div class="field"><label>납기</label><input data-field="delivery" placeholder="협의"></div><div class="field"><label>지불 조건</label><input data-field="payment" placeholder="50/40/10"></div><div class="field"><label>영업 담당자</label><input data-field="salesPerson"></div><div class="field"><label>일반관리/이윤 %</label><input type="number" min="0" max="1000" step="0.1" data-field="profit" value="10"></div><div class="field"><label>부가세</label><select data-field="vat"><option value="exclude">별도 (합계에 미포함)</option><option value="include">포함 (10% 추가)</option><option value="none">면세 (0%)</option></select></div><div class="field"><label>상세 내역 사용</label><label class="check"><input type="checkbox" data-field="useDetails" checked> 품목별 상세 내역 출력</label></div><div class="field"><label>표지 출력</label><label class="check"><input type="checkbox" data-field="cover" checked> 표지 포함</label></div>
+</div></section>
+<section class="card"><div class="sectionhead"><h2>② 공급자 정보 (기본값 저장)</h2><div class="actions"><button type="button" id="editSeller">기본정보 수정</button><button type="button" id="saveSeller" class="primary" hidden>기본정보 저장 · 고정</button></div></div><div class="grid"><div class="field"><label>상호</label><input data-field="seller" placeholder="회사명"></div><div class="field"><label>대표자</label><input data-field="ceo"></div><div class="field"><label>전화번호</label><input data-field="sellerPhone"></div><div class="field"><label>팩스번호</label><input data-field="sellerFax"></div><div class="field"><label>이메일</label><input data-field="sellerEmail"></div><div class="field"><label>영문 회사명</label><input data-field="sellerEn"></div><div class="field wide"><label>회사 주소</label><input data-field="sellerAddress"></div><div class="field wide"><label>회사 로고</label><input type="file" id="logoFile" accept="image/png,image/jpeg,image/webp"><button id="clearLogo" type="button" class="mini">로고 제거</button></div><div class="field wide"><label>대표자 직인</label><input type="file" id="stampFile" accept="image/png,image/jpeg,image/webp"><button id="clearStamp" type="button" class="mini">직인 제거</button></div></div><p class="hint">로고는 견적서 공급자 정보 상단에 표시됩니다. 직인은 대표자 이름 오른쪽의 (인) 글자 위에 겹쳐 출력됩니다. 배경이 투명한 PNG 직인 이미지 사용을 권장합니다.</p><p class="hint">처음 한 번 공급자 정보를 입력하고 [기본정보 저장 · 고정]을 누르면 다음 견적서부터 자동 입력됩니다. 같은 브라우저의 로컬 저장소에 저장되므로 브라우저 데이터를 삭제하면 초기화될 수 있습니다. 별도 백업은 [내용 저장]을 이용하세요.</p></section>
+<section class="card"><div class="sectionhead"><h2>③ 견적 품목 요약</h2><button id="addItem" type="button">+ 품목 추가</button></div><p class="hint">PDF 견적 요약은 페이지당 20행으로 출력하며 초과분은 다음 페이지로 이어집니다. 세부 항목이 있으면 그 합계가 상위 품목의 단가에 자동 반영되며, 금액은 상위 수량 × 단가로 계산됩니다. 세부 항목이 없으면 단가를 직접 입력할 수 있습니다.</p><div class="tableouter"><table class="edit"><thead><tr><th style="width:5%">No.</th><th style="width:28%">품명</th><th>PART No.</th><th>MAKER</th><th style="width:8%">수량</th><th style="width:8%">단위</th><th style="width:12%">단가 (원)</th><th style="width:12%">금액 (원)</th><th style="width:12%">비고</th><th style="width:7%">삭제</th></tr></thead><tbody id="summaryRows"></tbody></table></div><div class="stats" style="margin-top:15px"><span>품목 소계 <strong id="sumBase">0원</strong></span><span>일반관리/이윤 <strong id="sumProfit">0원</strong></span><span>총 견적 <strong id="sumGrand">0원</strong></span></div></section>
+<section class="card" id="detailsSection"><div class="sectionhead"><h2>④ 품목별 상세 내역</h2></div><p class="hint">세부 항목을 추가하면 그 합계가 상위 품목의 단가에 자동으로 적용됩니다. 세부 항목 표에는 메이커만 유지하고 파트넘버와 비고는 제외했습니다.</p><div id="detailGroups"></div></section>
+<section class="card"><div class="sectionhead"><h2>⑤ 특이사항</h2></div><div class="field wide"><label>견적 조건</label><textarea data-field="notes" rows="4">1. V.A.T 별도금액입니다.
+2. 견적외 항목 제외.</textarea></div><p class="hint">PDF는 브라우저 인쇄 창에서 ‘대상: PDF로 저장’을 선택하면 됩니다. 출력 시 입력 화면은 빠지고 A4 문서만 출력됩니다. 페이지별 내용은 자동으로 분리됩니다.</p></section><p class="status" id="status" role="status"></p></div><div id="printArea" aria-hidden="true"></div>
+<script>
+(()=>{'use strict';const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],fmt=n=>Math.round(n).toLocaleString('ko-KR'),money=n=>'₩'+fmt(n),number=v=>{let n=Number(v);return Number.isFinite(n)&&n>=0?Math.min(n,1e13):0},signedNumber=v=>{let n=Number(v);return Number.isFinite(n)?Math.max(-1e13,Math.min(n,1e13)):0},quantity=v=>{let n=Number(String(v??'').replace(/,/g,''));return Number.isFinite(n)&&n>=0?Math.min(n,1e13):0},esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),f=k=>{let e=$(`[data-field="${k}"]`);return e?.type==='checkbox'?e.checked:e?.value??''},set=(k,v)=>{let e=$(`[data-field="${k}"]`);if(!e)return;if(e.type==='checkbox')e.checked=!!v;else e.value=v??''};let items=[],next=1,logo='',stamp='',sellerLocked=false;const SELLER_KEY='quote_supplier_profile_v3',SELLER_FIELDS=['seller','ceo','sellerPhone','sellerFax','sellerEmail','sellerEn','sellerAddress'];const status=t=>{$('#status').textContent=t};const today=()=>{let d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
+function addItem(obj={}){if(items.length>=80)return status('품목은 최대 80개까지 추가 가능합니다.');items.push({id:next++,name:obj.name||'',part:obj.part||'',maker:obj.maker||'',qty:obj.qty??'',unit:obj.unit??'',price:obj.price??'',note:obj.note||'',details:Array.isArray(obj.details)?obj.details.map(x=>({...x})):[]});render()}
+function detailSum(it){return it.details.reduce((s,x)=>s+Math.round(quantity(x.qty)*signedNumber(x.price)),0)}
+function hasDetails(it){return !!(f('useDetails')&&it.details.length)}
+function unitPrice(it){return hasDetails(it)?detailSum(it):signedNumber(it.price)}
+function unitPriceText(it){return hasDetails(it)?fmt(detailSum(it)):String(it.price??'').trim()===''?'':fmt(signedNumber(it.price))}
+function total(it){return Math.round(quantity(it.qty)*unitPrice(it))}
+function amountText(it){return (String(it.qty??'').trim()===''||(!hasDetails(it)&&String(it.price??'').trim()===''))?'':fmt(total(it))}
+function totals(){let base=items.reduce((s,x)=>s+total(x),0),profitBase=items.reduce((s,x)=>s+Math.max(0,total(x)),0),profit=Math.round(profitBase*number(f('profit'))/100),before=base+profit,vat=f('vat')==='include'?Math.round(before*.1):0;return {base,profit,vat,grand:before+vat}}
+function render(){const tb=$('#summaryRows'),dg=$('#detailGroups');$('#detailsSection').hidden=!f('useDetails');tb.replaceChildren();dg.replaceChildren();items.forEach((it,i)=>{let tr=document.createElement('tr');tr.innerHTML=`<td style="text-align:center">${i+1}</td>${[['name','품명'],['part','파트번호'],['maker','메이커'],['qty','수량'],['unit','단위']].map(([k,label])=>k==='qty'?`<td><div class="qty-control"><input aria-label="${label}" data-k="qty" type="number" min="0" step="1" value="${String(it.qty??'').trim()==''?'':quantity(it.qty)}"><button type="button" class="mini" data-act="count" title="수량 1 증가">+1</button></div></td>`:`<td><input aria-label="${label}" data-k="${k}" value="${esc(it[k])}"></td>`).join('')}<td><input aria-label="단가" data-k="price" type="number" step="1" value="${hasDetails(it)?detailSum(it):esc(it.price)}" ${hasDetails(it)?'readonly title="상세 합계 자동 반영 (수정 불가)"':''}></td><td class="amount">${amountText(it)}</td><td><input aria-label="품목 비고" data-k="note" value="${esc(it.note)}"></td><td><button class="mini remove" type="button" data-act="remove">삭제</button></td>`;tr.querySelectorAll('input[data-k]').forEach(el=>el.addEventListener('input',()=>{it[el.dataset.k]=el.dataset.k==='qty'&&el.value.trim()!==''?String(quantity(el.value)):el.value;if(el.dataset.k==='qty')el.value=it.qty;updateTotals();if(el.dataset.k==='name')group.querySelector('.group-name').value=el.value}));tr.querySelector('[data-act=count]').addEventListener('click',()=>{it.qty=String(quantity(it.qty)+1);tr.querySelector('[data-k=qty]').value=it.qty;updateTotals()});tr.querySelector('[data-act=remove]').addEventListener('click',()=>{items=items.filter(x=>x!==it);render()});tb.append(tr);
+let group=document.createElement('div');group.className='group';group.innerHTML=`<div class="groupheader"><b>${i+1}.</b><input class="group-name" aria-label="상세 품목명" value="${esc(it.name)}"><span class="total">상세 합계 ${money(detailSum(it))}</span><button type="button" class="mini" data-act="addDetail">+ 세부 항목</button></div><div class="groupbody"><div class="tableouter"><table class="edit"><thead><tr><th style="width:8%">번호</th><th style="width:27%">품명</th><th>메이커</th><th style="width:8%">수량</th><th style="width:8%">단위</th><th style="width:14%">단가</th><th style="width:14%">금액</th><th style="width:8%">삭제</th></tr></thead><tbody></tbody></table></div></div>`;group.querySelector('.group-name').addEventListener('input',e=>{it.name=e.target.value;tr.querySelector('[data-k=name]').value=it.name});group.querySelector('[data-act=addDetail]').addEventListener('click',()=>{if(it.details.length>=150)return status('한 품목당 상세내역은 최대 150개입니다.');it.details.push({name:'',maker:'',qty:'',unit:'',price:''});render()});let dt=group.querySelector('tbody');it.details.forEach((d,j)=>{let r=document.createElement('tr');r.innerHTML=`<td style="text-align:center">${i+1}-${j+1}</td>${[['name','품명'],['maker','메이커'],['qty','수량'],['unit','단위'],['price','단가']].map(([k,label])=>k==='qty'?`<td><div class="qty-control"><input aria-label="${label}" data-k="qty" type="number" min="0" step="1" value="${String(d.qty??'').trim()==''?'':quantity(d.qty)}"><button type="button" class="mini" data-act="count" title="수량 1 증가">+1</button></div></td>`:`<td><input aria-label="${label}" data-k="${k}" ${k==='price'?'type="number" step="1"':''} value="${esc(d[k])}"></td>`).join('')}<td class="amount">${fmt(quantity(d.qty)*signedNumber(d.price))}</td><td><button type="button" class="mini remove">삭제</button></td>`;r.querySelectorAll('input').forEach(el=>el.addEventListener('input',()=>{d[el.dataset.k]=el.dataset.k==='qty'&&el.value.trim()!==''?String(quantity(el.value)):el.value;if(el.dataset.k==='qty')el.value=d.qty;updateTotals()}));r.querySelector('[data-act=count]').addEventListener('click',()=>{d.qty=String(quantity(d.qty)+1);r.querySelector('[data-k=qty]').value=d.qty;updateTotals()});r.querySelector('button.remove').addEventListener('click',()=>{it.details.splice(j,1);render()});dt.append(r)});dg.append(group)});updateTotals()}
+function updateTotals(){const v=totals();$('#sumBase').textContent=money(v.base);$('#sumProfit').textContent=money(v.profit);$('#sumGrand').textContent=money(v.grand);$$('#summaryRows tr').forEach((tr,i)=>{tr.querySelector('.amount').textContent=amountText(items[i]);let pr=tr.querySelector('[data-k=price]');pr.readOnly=hasDetails(items[i]);pr.value=hasDetails(items[i])?detailSum(items[i]):items[i].price;pr.title=hasDetails(items[i])?'상세 합계가 자동 반영됩니다. 세부 항목을 모두 삭제하면 직접 입력할 수 있습니다.':''});$$('.group').forEach((g,i)=>{g.querySelector('.total').textContent='상세 합계 '+money(detailSum(items[i]));g.querySelectorAll('tbody tr').forEach((r,j)=>r.querySelector('.amount').textContent=fmt(number(items[i].details[j].qty)*signedNumber(items[i].details[j].price)))})}
+// 금액을 한국어 한자릿수 단위(만/억/조/경)로 변환합니다.
+function koreanWon(value){
+ const n=Math.max(0,Math.round(Number(value)||0));
+ if(n===0)return '영 원정';
+ const digits=['','일','이','삼','사','오','육','칠','팔','구'];
+ const units=['','십','백','천'];
+ const bigUnits=['','만','억','조','경'];
+ let remain=n,idx=0,groups=[];
+ while(remain>0&&idx<bigUnits.length){
+  let chunk=remain%10000,part='';
+  for(let pos=3;pos>=0;pos--){
+   const d=Math.floor(chunk/Math.pow(10,pos))%10;
+   if(!d)continue;
+   part+=(d===1&&pos>0?'':digits[d])+units[pos];
+  }
+  if(part)groups.unshift(part+bigUnits[idx]);
+  remain=Math.floor(remain/10000);idx++;
+ }
+ return (remain>0?fmt(n):groups.join(''))+' 원정';
+}
+function vatCaption(){return f('vat')==='include'?'(VAT 포함)':f('vat')==='none'?'(VAT 면세)':'(VAT 별도)'}
+function sheet(inner,cl=''){return `<section class="p-sheet ${cl}">${inner}<div class="p-foot">${esc(f('sellerEn')||f('seller'))}</div></section>`}
+function renderPrint(){const v=totals(),company=esc(f('seller')),client=esc(f('client')),date=esc(f('quoteDate')),project=esc(f('project'));let parts=[];
+if(f('cover'))parts.push(sheet(`<div class="p-cover"><div class="recipient">${client||'고객사'}　貴中</div><div class="ctitle">見 積 書</div><div class="project">${project}</div><div class="date">제출일 : ${date}</div><div class="seller">${company}</div><div>${esc(f('sellerEn'))}</div></div>`,'p-cover-sheet'));
+const logo=logoHtml(),stampTag=stamp?`<img class="p-stamp-image" alt="대표자 직인" src="${stamp}">`:'';
+const header=`<div class="p-title">見　積　書</div><div class="p-top"><div class="p-intro">일련번호 : ${esc(f('quoteNo'))}<br>프로젝트명 : <b>${project}</b><br><br>상기 제목에 대한 견적을 하기와 같이 합니다.<br>${date}<div class="p-amount-words"><div class="p-amount-korean">일금 : ${koreanWon(v.grand)} <span class="p-amount-vat">${vatCaption()}</span></div></div></div><div class="p-seller"><div class="p-seller-logo">${logo}</div><div class="p-company-name">${company}</div><div class="p-representative">대표 ${esc(f('ceo'))}<span class="p-stamp-anchor">(인)${stampTag}</span></div><div>${esc(f('sellerAddress'))}</div><div>TEL : ${esc(f('sellerPhone'))}　FAX : ${esc(f('sellerFax'))}</div><div>e-mail : ${esc(f('sellerEmail'))}</div></div></div>`;
+const info=`<table class="p-table"><colgroup><col style="width:16%"><col style="width:34%"><col style="width:21%"><col style="width:29%"></colgroup><tr><td class="label">고객 담당</td><td>${client} ${esc(f('clientPerson'))}</td><td class="label">고객 전화 번호</td><td>${esc(f('clientPhone'))}</td></tr><tr><td class="label">영업 담당</td><td>${esc(f('salesPerson'))}</td><td class="label">고객 FAX 번호</td><td>${esc(f('clientFax'))}</td></tr><tr><td class="label">합계 금액</td><td><b>${money(v.grand)}</b></td><td class="label">납품가능일자</td><td>${esc(f('delivery'))}</td></tr><tr><td class="label">지불 조건</td><td>${esc(f('payment'))}</td><td class="label">견적유효 기간</td><td>${esc(f('validUntil'))}</td></tr></table>`;
+const sumHead='<colgroup><col style="width:5%"><col style="width:22%"><col style="width:12%"><col style="width:10%"><col style="width:6%"><col style="width:6%"><col style="width:12%"><col style="width:15%"><col style="width:12%"></colgroup><thead><tr><th>번호</th><th>품명</th><th>PART No.</th><th>MAKER</th><th>수량</th><th>단위</th><th>단가</th><th>금액</th><th>비고</th></tr></thead>';
+const summaryLast=`<tr class="p-total-row"><td colspan="7" class="center">소계</td><td class="num">${fmt(v.base)}</td><td></td></tr><tr class="p-total-row"><td colspan="6" class="center">일반관리 및 기업이윤</td><td class="center">${esc(f('profit'))} %</td><td class="num">${fmt(v.profit)}</td><td></td></tr>${f('vat')==='include'?`<tr class="p-total-row"><td colspan="7" class="center">부가세 (10%)</td><td class="num">${fmt(v.vat)}</td><td></td></tr>`:''}<tr class="sum p-total-row"><td colspan="7" class="center">합　　계</td><td class="num">${money(v.grand)}</td><td></td></tr>`;
+// 기본 견적서의 남는 공간은 빈 행으로 채우고, 특이사항은 인쇄 페이지 하단에 고정합니다.
+const blankRow=n=>`<tr class="p-blank-row"><td class="center">${n}</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`;
+const firstCapacity=20, nextCapacity=20;
+let offset=0,pageNo=0;
+do{
+ const capacity=pageNo===0?firstCapacity:nextCapacity;
+ const sub=items.slice(offset,offset+capacity),last=offset+sub.length>=items.length;
+ let body=sub.map((it,j)=>`<tr class="p-item-row"><td class="center">${offset+j+1}</td><td>${esc(it.name)}</td><td>${esc(it.part)}</td><td class="center">${esc(it.maker)}</td><td class="center">${esc(it.qty)}</td><td class="center">${esc(it.unit)}</td><td class="num">${unitPriceText(it)}</td><td class="num">${amountText(it)}</td><td>${esc(it.note)}</td></tr>`).join('');
+ body+=Array.from({length:Math.max(0,capacity-sub.length)},(_,j)=>blankRow(offset+sub.length+j+1)).join('');
+ const terms=`<div class="p-terms"><div class="p-terms-label">특 이 사 항</div><div class="p-terms-text">${last?esc(f('notes')):''}</div></div>`;
+ parts.push(sheet(`<div class="p-frame p-summary-frame">${pageNo===0?header+info:`<div class="p-detail-title">견 적 내 역 (${pageNo+1})</div>`}<div class="p-summary-fill"><table class="p-table p-summarytable">${sumHead}<tbody>${body}${last?summaryLast:''}</tbody></table></div>${terms}</div>`));
+ offset+=sub.length;pageNo++;
+}while(offset<items.length);
+const detailHeader='<colgroup><col style="width:9%"><col style="width:31%"><col style="width:16%"><col style="width:8%"><col style="width:8%"><col style="width:14%"><col style="width:14%"></colgroup><thead><tr><th>번호</th><th>품명</th><th>메이커</th><th>수량</th><th>단위</th><th>단가</th><th>공급가액</th></tr></thead>';
+let blocks=[];items.forEach((it,i)=>{if(!f('useDetails')||!it.details.length)return;let body=`<tr class="p-detail-group"><td class="center">${i+1}</td><td colspan="6">${esc(it.name)}</td></tr>`+it.details.map((d,j)=>`<tr class="detailrow"><td class="center">${i+1}-${j+1}</td><td>${esc(d.name)}</td><td>${esc(d.maker)}</td><td class="center">${esc(d.qty)}</td><td class="center">${esc(d.unit)}</td><td class="num">${fmt(number(d.price))}</td><td class="num">${fmt(quantity(d.qty)*signedNumber(d.price))}</td></tr>`).join('')+`<tr class="p-detail-subtotal"><td colspan="6" class="center">총 계</td><td class="num">${fmt(detailSum(it))}</td></tr>`;blocks.push({rows:it.details.length+2,html:body})});let pages=[],pg='',used=0;for(let b of blocks){if(used&&used+b.rows>35){pages.push(pg);pg='';used=0}if(b.rows>35){ // split unusually long groups without splitting a page's table
+let itRows=b.html.match(/<tr[\s\S]*?<\/tr>/g)||[];while(itRows.length){let room=35-used;if(room<=0){pages.push(pg);pg='';used=0;room=35}let part=itRows.splice(0,room);pg+=part.join('');used+=part.length;if(used>=35){pages.push(pg);pg='';used=0}}}else{pg+=b.html;used+=b.rows}}if(pg)pages.push(pg);pages.forEach((body,i)=>parts.push(sheet(`<div class="p-frame p-details"><div class="p-detail-title">상 세 내 역 (${i+1}/${pages.length})</div><table class="p-table">${detailHeader}<tbody>${body}</tbody></table></div>`)));
+$('#printArea').innerHTML=parts.join('')}
+function logoHtml(){return logo?`<img class="p-logo-image" alt="회사 로고" src="${logo}">`:`<div class="p-logo">${esc(f('seller'))}</div>`}
+function collect(){return {version:4,fields:Object.fromEntries($$('[data-field]').map(e=>[e.dataset.field,e.type==='checkbox'?e.checked:e.value])),items,logo,stamp}}
+function download(text,name){let blob=new Blob([text],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+const SALES_PROFILES_KEY='quote_sales_profiles_v1';
+function setupSalesProfiles(){
+ const section=document.createElement('section');section.className='card';
+ section.innerHTML='<div class="sectionhead"><h2>담당자 개인 프로필</h2></div><div class="grid"><div class="field"><label for="salesProfileName">프로필 이름</label><input id="salesProfileName" placeholder="예: 홍길동"></div><div class="field"><label for="salesProfileSelect">저장된 담당자</label><select id="salesProfileSelect"><option value="">프로필 선택</option></select></div><div class="field wide"><div class="actions"><button type="button" id="saveSalesProfile">현재 담당자 저장</button><button type="button" id="loadSalesProfile">담당자 불러오기</button><button type="button" id="deleteSalesProfile">프로필 삭제</button></div></div></div><p class="hint">프로필은 이 브라우저에만 저장됩니다. 서버 계정이나 공급자 정보 고정과 별개이며, 다른 기기에서는 다시 등록해야 합니다.</p>';
+ const basic=$('[data-field="salesPerson"]').closest('.grid').parentElement;basic.after(section);
+ const nameInput=section.querySelector('#salesProfileName'),select=section.querySelector('#salesProfileSelect');
+ let profiles=[];
+ function refresh(){
+  try{const parsed=JSON.parse(localStorage.getItem(SALES_PROFILES_KEY)||'[]');profiles=Array.isArray(parsed)?parsed.filter(p=>p&&typeof p.name==='string'&&typeof p.person==='string'):[]}
+  catch(e){profiles=[];status('담당자 프로필을 읽지 못했습니다. 브라우저 저장소를 확인하세요.')}
+  select.replaceChildren(new Option('프로필 선택',''));
+  profiles.forEach((p,i)=>select.append(new Option(p.name+' · '+p.person,String(i))));
+ }
+ section.querySelector('#saveSalesProfile').addEventListener('click',()=>{
+  const person=String(f('salesPerson')).trim(),name=String(nameInput.value||person).trim();
+  if(!person){status('먼저 영업 담당자 이름을 입력하세요.');return}
+  if(!name){status('프로필 이름을 입력하세요.');return}
+  const index=profiles.findIndex(p=>p.name===name);
+  if(index>=0)profiles[index]={name,person};else profiles.push({name,person});
+  try{localStorage.setItem(SALES_PROFILES_KEY,JSON.stringify(profiles));refresh();select.value=String(profiles.findIndex(p=>p.name===name));status('담당자 프로필을 이 브라우저에 저장했습니다.')}
+  catch(e){status('담당자 프로필 저장에 실패했습니다. 브라우저 저장소 용량과 권한을 확인하세요.')}
+ });
+ section.querySelector('#loadSalesProfile').addEventListener('click',()=>{
+  const profile=profiles[Number(select.value)];
+  if(!profile){status('불러올 담당자 프로필을 선택하세요.');return}
+  set('salesPerson',profile.person);nameInput.value=profile.name;status('담당자 프로필을 불러왔습니다.');
+ });
+ section.querySelector('#deleteSalesProfile').addEventListener('click',()=>{
+  const index=Number(select.value);
+  if(!select.value||!profiles[index]){status('삭제할 담당자 프로필을 선택하세요.');return}
+  profiles.splice(index,1);
+  try{localStorage.setItem(SALES_PROFILES_KEY,JSON.stringify(profiles));refresh();status('담당자 프로필을 삭제했습니다.')}
+  catch(e){status('담당자 프로필 삭제에 실패했습니다. 브라우저 저장소를 확인하세요.')}
+ });
+ $('[data-field="salesPerson"]').addEventListener('input',()=>{if(!nameInput.value)nameInput.value=f('salesPerson')});
+ refresh();
+}
+function parseCsvRows(text,delimiter){
+ const rows=[];let row=[],cell='',quoted=false;
+ for(let i=0;i<text.length;i++){
+  const ch=text[i];
+  if(quoted){
+   if(ch==='"'&&text[i+1]==='"'){cell+='"';i++}
+   else if(ch==='"')quoted=false;
+   else cell+=ch;
+  }else if(ch==='"'&&cell==='')quoted=true;
+  else if(ch===delimiter){row.push(cell);cell=''}
+  else if(ch==='\n'||ch==='\r'){
+   if(ch==='\r'&&text[i+1]==='\n')i++;
+   row.push(cell);rows.push(row);row=[];cell='';
+  }else cell+=ch;
+ }
+ if(cell!==''||row.length){row.push(cell);rows.push(row)}
+ return rows;
+}
+function csvDelimiter(text){
+ const sample=text.split(/\r?\n/).slice(0,40);
+ return [',','\t',';'].map(delimiter=>({delimiter,score:sample.reduce((sum,line)=>{
+  let quoted=false,count=0;
+  for(let i=0;i<line.length;i++){if(line[i]==='"'&&line[i+1]==='"'){i++;continue}if(line[i]==='"')quoted=!quoted;else if(line[i]===delimiter&&!quoted)count++}
+  return sum+count;
+ },0)})).sort((a,b)=>b.score-a.score)[0].delimiter;
+}
+function csvHeaderName(value){return String(value??'').toLowerCase().replace(/[\s()[\]{}_\-./:]/g,'')}
+function csvColumn(row,aliases){
+ const labels=row.map(csvHeaderName);
+ for(const alias of aliases){const index=labels.indexOf(alias);if(index>=0)return index}
+ for(const alias of aliases){const index=labels.findIndex(label=>label.includes(alias));if(index>=0)return index}
+ return -1;
+}
+function csvHeaderMap(row){
+ const item=csvColumn(row,['품목명','물품명','제품명','상품명','품명','품목','물품','내역','내용','명칭','itemname','description','item']);
+ const itemLabel=csvHeaderName(row[item]??'');
+ const qty=csvColumn(row,['수량','quantity','qty']);
+ const price=csvColumn(row,['단가','판매단가','공급단가','매입단가','unitprice','price']);
+ const amount=csvColumn(row,['공급가액','금액','amount','supplyamount']);
+ if(item<0||/(코드|번호|code|itemno|partno)/.test(itemLabel)||qty<0||(price<0&&amount<0))return null;
+ const spec=csvColumn(row,['규격','사양','모델명','specification','spec']);
+ const unit=csvColumn(row,['단위','unit']);
+ return {item,qty,price,amount,spec,unit};
+}
+function csvNumber(value){
+ const text=String(value??'').trim().replace(/[₩￦원,\s]/g,'');
+ if(!text)return null;
+ const n=Number(text);
+ return Number.isFinite(n)?n:null;
+}
+function parseQuoteCsv(text){
+ const rows=parseCsvRows(text.replace(/^\uFEFF/,''),csvDelimiter(text));
+ let mapping=null;const details=[];
+ for(const row of rows){
+  const possible=csvHeaderMap(row);
+  if(possible){mapping=possible;continue}
+  if(!mapping)continue;
+  const name=String(row[mapping.item]??'').trim();
+  const normalized=csvHeaderName(name);
+  if(!name||/^(합계|소계|총계|총합계|총액|납기|결제조건|지불조건|견적일|공급가액|부가세|비고|조건)/.test(normalized))continue;
+  const qty=csvNumber(row[mapping.qty]);
+  const unitPrice=mapping.price>=0?csvNumber(row[mapping.price]):null;
+  const lineAmount=mapping.amount>=0?csvNumber(row[mapping.amount]):null;
+  if(qty===null||qty<=0)continue;
+  const price=unitPrice!==null?unitPrice:lineAmount!==null?lineAmount/qty:null;
+  if(price===null||price<0)continue;
+  const spec=mapping.spec>=0?String(row[mapping.spec]??'').trim():'';
+  const unit=mapping.unit>=0?String(row[mapping.unit]??'').trim():'';
+  details.push({name:spec?`${name} (${spec})`:name,maker:'',qty:String(qty),unit,price:String(price)});
+  if(details.length>150)throw Error('가져올 품목은 150개까지 가능합니다. CSV를 나누어 가져오세요.');
+ }
+ if(!details.length)throw Error('CSV에서 품목 행을 찾지 못했습니다. 품명·수량·단가(또는 금액) 헤더가 있는지 확인하세요.');
+ return details;
+}
+async function decodeCsvFile(file){
+ const bytes=await file.arrayBuffer();
+ try{return new TextDecoder('utf-8',{fatal:true}).decode(bytes)}
+ catch(e){
+  try{return new TextDecoder('euc-kr').decode(bytes)}
+  catch(error){throw Error('CSV 인코딩을 읽을 수 없습니다. UTF-8 또는 CP949 파일을 사용하세요.')}
+ }
+}
+function setupCsvImport(){
+ const section=document.createElement('section');section.className='card';
+ section.innerHTML='<div class="sectionhead"><h2>얼마에요 CSV 견적 가져오기</h2></div><p class="hint">얼마에요에서 내보낸 CSV를 선택하거나 아래에 끌어놓으세요. 품목·규격·수량·단가를 상세 내역으로 넣고, 상세 합계를 갑지 대표 품목 한 줄에 반영합니다. 가져온 견적에는 일반관리/이윤을 추가하지 않습니다.</p><div id="csvDrop" tabindex="0" role="button" aria-label="CSV 파일을 끌어놓거나 선택" style="border:2px dashed #9aaabd;border-radius:8px;padding:18px;text-align:center;background:#f7f9fb"><p style="margin:0 0 10px">CSV 파일을 여기로 끌어오세요</p><button type="button" id="chooseCsv" class="primary">CSV 파일 선택</button><input id="csvFile" class="hiddenfile" type="file" accept=".csv,text/csv"></div><div class="grid" style="margin-top:12px"><div class="field wide"><label for="csvSummaryName">갑지 대표 품목명</label><input id="csvSummaryName" placeholder="프로젝트명 또는 수입 견적 내역"></div></div><p class="hint">한글 인코딩은 UTF-8을 우선 읽고, 실패하면 CP949/EUC-KR로 처리합니다. 기존 품목이 있으면 확인 후 가져온 내역으로 교체됩니다.</p>';
+ const summary=$('#summaryRows').closest('section');summary.before(section);
+ const input=section.querySelector('#csvFile'),drop=section.querySelector('#csvDrop');
+ section.querySelector('#chooseCsv').addEventListener('click',()=>input.click());
+ drop.addEventListener('click',e=>{if(e.target===drop||e.target.tagName==='P')input.click()});
+ ['dragenter','dragover'].forEach(type=>drop.addEventListener(type,e=>{e.preventDefault();drop.style.background='#edf4fb'}));
+ ['dragleave','drop'].forEach(type=>drop.addEventListener(type,e=>{e.preventDefault();drop.style.background='#f7f9fb'}));
+ drop.addEventListener('drop',e=>{const file=e.dataTransfer.files?.[0];if(file)importCsv(file)});
+ input.addEventListener('change',e=>{const file=e.target.files?.[0];if(file)importCsv(file);input.value=''});
+ async function importCsv(file){
+  if(!/\.csv$/i.test(file.name)){status('CSV 파일만 가져올 수 있습니다.');return}
+  try{
+   const imported=parseQuoteCsv(await decodeCsvFile(file));
+   const hasExisting=items.some(it=>it.name.trim()||it.details.length||String(it.price).trim()!=='');
+   if(hasExisting&&!confirm('현재 견적 품목을 CSV에서 가져온 상세 내역으로 교체할까요?'))return;
+   const project=String(f('project')).trim();
+   const label=String(section.querySelector('#csvSummaryName').value||project||'수입 견적 내역').trim();
+   if(!label){status('갑지 대표 품목명을 입력하세요.');return}
+   items=[];next=1;set('useDetails',true);set('profit',0);
+   items.push({id:next++,name:label,part:'',maker:'',qty:'1',unit:'식',price:'',note:'',details:imported});
+   section.querySelector('#csvSummaryName').value=label;
+   render();
+   status(`${imported.length}개 품목을 상세 내역에 가져왔습니다. 갑지에는 "${label}" 한 줄로 합산되며 이윤은 0%로 설정했습니다.`);
+  }catch(e){status('CSV 가져오기 실패: '+e.message)}
+ }
+}
+function init(){items=[];next=1;logo='';stamp='';$$('[data-field]').forEach(e=>{if(e.type==='checkbox')e.checked=['cover','useDetails'].includes(e.dataset.field);else e.value=''});let d=today();set('quoteDate',d);let until=new Date(d+'T00:00:00');until.setDate(until.getDate()+14);set('validUntil',until.getFullYear()+'-'+String(until.getMonth()+1).padStart(2,'0')+'-'+String(until.getDate()).padStart(2,'0'));set('quoteNo','Q-'+d.replaceAll('-','')+'-001');set('delivery','협의');set('profit',10);set('vat','exclude');set('notes','1. V.A.T 별도금액입니다.\n2. 견적외 항목 제외.');addItem();addItem();addItem();loadSupplierProfile();render()}
+$('#addItem').addEventListener('click',()=>addItem());$('#newBtn').addEventListener('click',()=>{if(confirm('작성 중인 내용을 지우고 새 견적서를 만드시겠습니까?')){init();status('새 견적서를 시작했습니다.')}});$('#saveBtn').addEventListener('click',()=>{let name=String(f('client')||'고객사').replace(/[\\/:*?"<>|]/g,'_').slice(0,50);download(JSON.stringify(collect(),null,2),`상세견적서_${name}_${f('quoteDate')}.json`);status('편집 가능한 견적서 파일을 저장했습니다.')});$('#loadBtn').addEventListener('click',()=>$('#loadFile').click());$('#loadFile').addEventListener('change',async e=>{try{let file=e.target.files?.[0];if(!file)return;let data=JSON.parse(await file.text());if(!data.fields||!Array.isArray(data.items)||data.items.length>80)throw Error('지원하지 않는 파일입니다.');$$('[data-field]').forEach(el=>set(el.dataset.field,data.fields[el.dataset.field]));items=[];next=1;(data.items.length?data.items:[{}]).forEach(it=>{if((it.details||[]).length>150)throw Error('세부 항목이 너무 많습니다.');addItem(it)});logo=typeof data.logo==='string'&&data.logo.startsWith('data:image/')?data.logo:'';stamp=typeof data.stamp==='string'&&data.stamp.startsWith('data:image/')?data.stamp:'';toggleSellerLock(false);render();status('불러오기 완료: 공급자 정보는 이 파일 기준입니다. 기본값으로 저장하려면 [기본정보 저장 · 고정]을 누르세요.')}catch(err){status('불러오기 실패: '+err.message)}finally{e.target.value=''}});
+$('#logoFile').addEventListener('change',e=>{let file=e.target.files?.[0];if(!file)return;if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>2e6){status('로고는 2MB 이하 PNG/JPG/WebP만 가능합니다.');return}let reader=new FileReader();reader.onload=()=>{logo=reader.result;status('로고가 등록되었습니다.')};reader.readAsDataURL(file)});$('#clearLogo').addEventListener('click',()=>{logo='';$('#logoFile').value='';status('로고를 제거했습니다.')});$('#stampFile').addEventListener('change',e=>{let file=e.target.files?.[0];if(!file)return;if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>2e6){status('직인은 2MB 이하 PNG/JPG/WebP만 가능합니다.');e.target.value='';return}let reader=new FileReader();reader.onload=()=>{stamp=reader.result;status('직인이 등록되었습니다. PDF 출력 시 대표자 옆 (인) 위에 표시됩니다.')};reader.readAsDataURL(file)});$('#clearStamp').addEventListener('click',()=>{stamp='';$('#stampFile').value='';status('직인을 제거했습니다.')});function toggleSellerLock(lock){sellerLocked=lock;const sec=$('#editSeller').closest('section');sec.classList.toggle('sellerlocked',lock);SELLER_FIELDS.forEach(k=>{$(`[data-field="${k}"]`).readOnly=lock});$('#editSeller').textContent=lock?'기본정보 수정':'수정 취소';$('#saveSeller').hidden=lock;$('#logoFile').disabled=lock;$('#clearLogo').disabled=lock;$('#stampFile').disabled=lock;$('#clearStamp').disabled=lock}
+function loadSupplierProfile(){try{const raw=localStorage.getItem(SELLER_KEY);if(!raw){toggleSellerLock(false);$('#editSeller').textContent='기본정보 입력';return}const p=JSON.parse(raw);SELLER_FIELDS.forEach(k=>set(k,p.fields?.[k]||''));logo=typeof p.logo==='string'&&p.logo.startsWith('data:image/')?p.logo:'';stamp=typeof p.stamp==='string'&&p.stamp.startsWith('data:image/')?p.stamp:'';toggleSellerLock(true)}catch(e){toggleSellerLock(false);status('자동 기본정보를 불러오지 못했습니다. 저장 기능을 확인하세요.')}}
+function saveSupplierProfile(){try{const fields=Object.fromEntries(SELLER_FIELDS.map(k=>[k,f(k)]));localStorage.setItem(SELLER_KEY,JSON.stringify({fields,logo,stamp}));toggleSellerLock(true);status('공급자 기본정보를 이 브라우저에 저장하고 고정했습니다. 다음 견적서에 자동 적용됩니다.')}catch(e){status('기본정보 저장 실패: 브라우저 저장소가 차단됐거나 용량이 부족합니다. [내용 저장]으로 백업하세요.')}}
+$('#editSeller').addEventListener('click',()=>{if(sellerLocked){toggleSellerLock(false);status('공급자 기본정보를 수정한 뒤 [기본정보 저장 · 고정]을 누르세요.')}else{loadSupplierProfile();status('저장된 기본정보로 복원했습니다.')}});
+$('#saveSeller').addEventListener('click',saveSupplierProfile);
+$$('[data-field]').forEach(el=>el.addEventListener('input',()=>{if(el.dataset.field==='useDetails'){if(!el.checked){items.forEach(it=>{if(it.details.length)it.price=detailSum(it)});status('상세 사용을 해제했습니다. 상세 합계를 단가로 복사했으며 직접 수정할 수 있습니다.');}else{status('상세 사용을 켰습니다. 세부 항목 합계가 다시 적용됩니다.')}render()}else updateTotals()}));
+$('#printBtn').addEventListener('click',()=>{renderPrint();window.print()});setupSalesProfiles();setupCsvImport();init()})();
+</script></body></html>
