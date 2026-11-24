@@ -30,13 +30,19 @@
   <main>
     <div class="brand"><span class="mark">SSR</span><span>디지털 견적</span></div>
     <h1>어떤 문서를 작성하시나요?</h1>
-    <p class="intro">공급업체에 보낼 견적 요청서를 만들거나, 받은 견적을 바탕으로 고객에게 제출할 견적서를 작성할 수 있습니다.</p>
+    <p class="intro">일반 고객용 견적서, 직원용 얼마에요 견적서, 공급업체에 보낼 견적 요청서를 각각 작성할 수 있습니다.</p>
     <div class="choices">
-      <a class="choice" href="/quote/write/">
-        <span class="choice-tag">QUOTE</span>
-        <h2>견적서 작성</h2>
-        <p>견적요청에 회신할 고객용 견적서를 만들고, 얼마에요 CSV 내역을 불러와 PDF 또는 JSON으로 저장합니다.</p>
-        <span class="open">견적서 작성 열기 →</span>
+      <a class="choice" href="/quote/customer/">
+        <span class="choice-tag">CUSTOMER</span>
+        <h2>일반 고객용 견적서</h2>
+        <p>안내된 공통 CSV 서식을 사용해 품목별 상세 내역을 넣고, 고객 제출용 견적서를 작성합니다.</p>
+        <span class="open">고객용 견적서 열기 →</span>
+      </a>
+      <a class="choice" href="/quote/staff/">
+        <span class="choice-tag">STAFF</span>
+        <h2>직원용 견적서</h2>
+        <p>얼마에요에서 내보낸 CSV를 사용합니다. 직원 로그인·접근 제한을 적용하기 전까지는 공개된 경로입니다.</p>
+        <span class="open">직원용 견적서 열기 →</span>
       </a>
       <a class="choice" href="/quote/request/">
         <span class="choice-tag">REQUEST FOR QUOTATION</span>
@@ -45,7 +51,7 @@
         <span class="open">견적 요청서 작성 열기 →</span>
       </a>
     </div>
-    <footer>작성 내용은 이 브라우저에서 입력·저장됩니다. 이 화면은 견적서 작성과 견적 요청서 작성을 구분하는 시작 페이지입니다.</footer>
+    <footer>작성 내용은 이 브라우저에서 입력·저장됩니다. 직원 전용 페이지는 로그인·접근 제한이 아직 적용되지 않았으니 민감한 견적 정보는 입력하지 마세요.</footer>
   </main>
 </body>
 </html>
