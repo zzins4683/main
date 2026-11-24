@@ -216,9 +216,417 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
+    .robot-intro {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      overflow: hidden;
+      background: #020711;
+      color: #fff;
+      isolation: isolate;
+    }
+    .robot-intro.is-active { display: block; }
+    .robot-intro__scene,
+    .robot-intro__door {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .robot-intro__scene {
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 50% 48%, rgba(55,135,174,.58), rgba(11,35,52,.83) 34%, transparent 70%),
+        linear-gradient(180deg, #071522 0%, #0a2334 48%, #02080e 100%);
+    }
+    .robot-intro__scene::before {
+      content: "";
+      position: absolute;
+      inset: 7% 12% 13%;
+      border-right: 3px solid rgba(135,194,219,.28);
+      border-left: 3px solid rgba(135,194,219,.28);
+      background:
+        linear-gradient(90deg, rgba(3,12,20,.88), transparent 16%, transparent 84%, rgba(3,12,20,.88)),
+        linear-gradient(180deg, rgba(3,12,20,.52), transparent 38%, rgba(2,7,12,.5));
+      box-shadow: inset 12px 0 26px rgba(0,0,0,.5), inset -12px 0 26px rgba(0,0,0,.5), 0 0 28px rgba(87,169,205,.12);
+      clip-path: polygon(12% 0, 88% 0, 100% 100%, 0 100%);
+    }
+    .robot-intro__floor {
+      position: absolute;
+      inset: 57% 0 0;
+      background:
+        linear-gradient(180deg, rgba(36,86,111,.18), rgba(1,5,10,.88)),
+        repeating-linear-gradient(90deg, transparent 0 17%, rgba(116,181,205,.13) 17.2%, transparent 17.8% 34%);
+      clip-path: polygon(31% 0, 69% 0, 100% 100%, 0 100%);
+      opacity: .8;
+    }
+    .robot-intro__robot {
+      position: absolute;
+      z-index: 0;
+      left: 50%;
+      bottom: 1%;
+      height: min(72vh, 550px);
+      max-width: 82vw;
+      transform: translateX(-50%) scale(.34);
+      transform-origin: 50% 100%;
+      filter: drop-shadow(0 14px 28px rgba(0,0,0,.75)) drop-shadow(0 0 18px rgba(98,180,216,.2));
+      animation: robot-approach 3.35s 1.1s cubic-bezier(.18,.72,.2,1) both;
+    }
+    .robot-intro__figure {
+      display: block;
+      width: auto;
+      height: 100%;
+      overflow: visible;
+      animation: robot-bob 1.02s 1.12s ease-in-out 3;
+    }
+    .robot-intro__figure > ellipse {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: robot-footfall 1.02s 1.12s ease-in-out 3;
+    }
+    .robot-intro__arm,
+    .robot-intro__leg {
+      transform-box: view-box;
+    }
+    .robot-intro__arm--left {
+      transform-origin: 91px 145px;
+      animation: robot-arm-left 1.02s 1.12s ease-in-out 3;
+    }
+    .robot-intro__arm--right {
+      transform-origin: 209px 145px;
+      animation: robot-arm-right 1.02s 1.12s ease-in-out 3;
+    }
+    .robot-intro__leg--left {
+      transform-origin: 127px 285px;
+      animation: robot-leg-left 1.02s 1.12s ease-in-out 3;
+    }
+    .robot-intro__leg--right {
+      transform-origin: 173px 285px;
+      animation: robot-leg-right 1.02s 1.12s ease-in-out 3;
+    }
+    .robot-intro__door {
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      bottom: 0;
+      width: var(--door-split, 50%);
+      overflow: hidden;
+      background: #899093;
+      will-change: transform;
+    }
+    .robot-intro__door img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: brightness(.84) contrast(1.08) saturate(.82);
+      user-select: none;
+      pointer-events: none;
+    }
+    .robot-intro__door--right img {
+      left: calc(0px - var(--door-split, 50vw));
+    }
+    .robot-intro__door--left {
+      left: 0;
+      animation: door-open-left .95s .7s cubic-bezier(.65,0,.25,1) both;
+    }
+    .robot-intro__door--right {
+      left: var(--door-split, 50%);
+      width: calc(100% - var(--door-split, 50%));
+      animation: door-open-right .95s .7s cubic-bezier(.65,0,.25,1) both;
+    }
+    .robot-intro__brand {
+      position: absolute;
+      z-index: 2;
+      top: max(22px, env(safe-area-inset-top));
+      left: 22px;
+      color: rgba(255,255,255,.92);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      opacity: 0;
+      animation: intro-brand-in .5s 1.1s ease forwards;
+    }
+    .robot-intro__skip {
+      position: absolute;
+      z-index: 3;
+      right: 18px;
+      bottom: max(20px, env(safe-area-inset-bottom));
+      padding: 10px 15px;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.58);
+      border-radius: 999px;
+      background: rgba(0,0,0,.42);
+      font-size: 13px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .robot-intro.is-leaving {
+      animation: intro-overlay-leave .9s ease forwards;
+      pointer-events: none;
+    }
+    .robot-intro.is-leaving::after {
+      content: "";
+      position: absolute;
+      z-index: 2;
+      inset: 0;
+      background: #fff;
+      animation: intro-whiteout .9s ease forwards;
+      pointer-events: none;
+    }
+    @keyframes door-open-left {
+      to { transform: translateX(-80%); }
+    }
+    @keyframes door-open-right {
+      to { transform: translateX(80%); }
+    }
+    @keyframes robot-approach {
+      0% { transform: translateX(-50%) scale(.34); }
+      100% { transform: translateX(-50%) scale(1); }
+    }
+    @keyframes robot-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-2px); }
+    }
+    @keyframes robot-arm-left {
+      0%, 100% { transform: rotate(7deg); }
+      50% { transform: rotate(-7deg); }
+    }
+    @keyframes robot-arm-right {
+      0%, 100% { transform: rotate(-7deg); }
+      50% { transform: rotate(7deg); }
+    }
+    @keyframes robot-leg-left {
+      0%, 100% { transform: translateX(-8px) rotate(-10deg) translateY(0); }
+      50% { transform: translateX(-8px) rotate(10deg) translateY(-5px); }
+    }
+    @keyframes robot-leg-right {
+      0%, 100% { transform: translateX(8px) rotate(10deg) translateY(-5px); }
+      50% { transform: translateX(8px) rotate(-10deg) translateY(0); }
+    }
+    @keyframes robot-footfall {
+      0%, 100% { opacity: .68; transform: scaleX(1); }
+      50% { opacity: .9; transform: scaleX(.86); }
+    }
+    @keyframes intro-brand-in {
+      to { opacity: 1; }
+    }
+    @keyframes intro-overlay-leave {
+      0%, 45% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    @keyframes intro-whiteout {
+      0%, 35% { opacity: 0; }
+      50%, 100% { opacity: 1; }
+    }
+    .robot-intro__scene::before,
+    .robot-intro__floor,
+    .robot-intro__figure { display: none !important; }
+    .robot-intro__scene { z-index: 0; background: #070b10; }
+    .robot-intro__scene::after {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 54%, rgba(1,5,11,.12) 68%, rgba(1,5,11,.48) 100%);
+      pointer-events: none;
+    }
+    .robot-intro__backdrop {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: brightness(.72) contrast(1.04) saturate(.88);
+    }
+    .robot-intro__robot {
+      z-index: 1;
+      left: calc(50% - 2vw);
+      top: auto;
+      bottom: 2vh;
+      width: min(26vh, 230px);
+      height: min(64vh, 560px);
+      max-width: 82vw;
+      transform: translate(-50%, 0) scale(.22);
+      transform-origin: 50% 70%;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,.68));
+      animation: robot-approach 9.5s 1.55s cubic-bezier(.42,0,.58,1) both;
+    }
+    .robot-intro__body {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+      pointer-events: none;
+      user-select: none;
+    }
+    .robot-intro__body--pose-a {
+      animation: robot-pose-a 1.2s 1.55s linear 8 both;
+    }
+    .robot-intro__body--pose-b {
+      animation: robot-pose-b 1.2s 1.55s linear 8 both;
+    }
+    .robot-intro__mist {
+      position: absolute;
+      z-index: 2;
+      right: -14%;
+      bottom: -7%;
+      left: -14%;
+      height: 43%;
+      opacity: .5;
+      filter: blur(28px);
+      background:
+        radial-gradient(ellipse at 20% 62%, rgba(220,232,238,.26), transparent 54%),
+        radial-gradient(ellipse at 55% 52%, rgba(190,211,221,.22), transparent 58%),
+        radial-gradient(ellipse at 84% 66%, rgba(220,232,238,.2), transparent 52%);
+      mix-blend-mode: screen;
+      pointer-events: none;
+      animation: floor-mist-drift 7s ease-in-out infinite alternate;
+    }
+    .robot-intro__door--left {
+      z-index: 3;
+      animation-delay: .25s;
+      animation-duration: 1.15s;
+    }
+    .robot-intro__door--right {
+      z-index: 3;
+      animation-delay: .25s;
+      animation-duration: 1.15s;
+    }
+    .robot-intro__brand { z-index: 4; }
+    .robot-intro__skip { z-index: 5; }
+    @keyframes robot-approach {
+      0% { transform: translate(-50%, 0) scale(.22); }
+      100% { transform: translate(-50%, 2.5vh) scale(.9); }
+    }
+    @keyframes robot-pose-a {
+      0%, 49.99% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    @keyframes robot-pose-b {
+      0%, 49.99% { opacity: 0; }
+      50%, 100% { opacity: 1; }
+    }
+    @keyframes floor-mist-drift {
+      from { transform: translateX(-3%) translateY(2%); opacity: .48; }
+      to { transform: translateX(3%) translateY(-3%); opacity: .74; }
+    }
+    @media (min-width: 621px), (prefers-reduced-motion: reduce) {
+      .robot-intro:not(.is-preview) { display: none !important; }
+    }
   </style>
 </head>
 <body>
+  <div class="robot-intro" id="robotIntro" aria-label="SSR 로봇 인트로" aria-hidden="true">
+    <div class="robot-intro__scene">
+      <img class="robot-intro__backdrop" src="/assets/ssr-robot-entry-scene.jpg" alt="" fetchpriority="high" />
+      <div class="robot-intro__floor"></div>
+    </div>
+    <div class="robot-intro__robot" aria-hidden="true">
+      <svg class="robot-intro__figure" viewBox="0 0 300 500" role="presentation" hidden>
+        <defs>
+          <linearGradient id="robotGold" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="#ffe2b7" />
+            <stop offset=".2" stop-color="#d45238" />
+            <stop offset=".48" stop-color="#681a20" />
+            <stop offset=".74" stop-color="#c84931" />
+            <stop offset="1" stop-color="#35131a" />
+          </linearGradient>
+          <linearGradient id="robotGoldLight" x1="0" x2="1">
+            <stop stop-color="#63201b" />
+            <stop offset=".45" stop-color="#f0c86c" />
+            <stop offset="1" stop-color="#8a3c24" />
+          </linearGradient>
+          <linearGradient id="robotSteel" x1="0" x2="0" y1="0" y2="1">
+            <stop stop-color="#596873" />
+            <stop offset=".45" stop-color="#18242c" />
+            <stop offset="1" stop-color="#71818a" />
+          </linearGradient>
+          <linearGradient id="robotVisor" x1="0" x2="1">
+            <stop stop-color="#071728" />
+            <stop offset=".5" stop-color="#238bb7" />
+            <stop offset="1" stop-color="#071728" />
+          </linearGradient>
+          <filter id="robotGlow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+        </defs>
+        <ellipse cx="150" cy="485" rx="91" ry="12" fill="#02070c" opacity=".72" />
+        <g class="robot-intro__leg robot-intro__leg--left">
+          <path d="M119 273 L151 273 L151 326 L142 369 L112 369 L105 330 Z" fill="url(#robotGold)" stroke="#f3d16b" stroke-width="3" />
+          <path d="M112 294 L143 300 L137 325 L108 322 Z" fill="#4a3c26" />
+          <path d="M111 330 L143 330 L138 354 L110 352 Z" fill="url(#robotSteel)" stroke="#202a30" stroke-width="3" />
+          <circle cx="126" cy="370" r="17" fill="url(#robotSteel)" stroke="#d7ae4c" stroke-width="4" />
+          <path d="M112 385 L140 385 L148 447 L151 468 L133 478 L105 467 L104 437 Z" fill="url(#robotGoldLight)" stroke="#f1cf68" stroke-width="3" />
+          <path d="M111 399 L139 403 L136 432 L108 431 Z" fill="#34434a" stroke="#1b262d" stroke-width="3" />
+          <path d="M105 463 L145 463 L157 480 L151 491 L95 491 L96 478 Z" fill="url(#robotSteel)" stroke="#d5aa45" stroke-width="3" />
+          <path d="M105 480 L150 480" stroke="#e9c65e" stroke-width="3" />
+        </g>
+        <g class="robot-intro__leg robot-intro__leg--right">
+          <path d="M149 273 L181 273 L195 330 L188 369 L158 369 L149 326 Z" fill="url(#robotGold)" stroke="#f3d16b" stroke-width="3" />
+          <path d="M157 300 L188 294 L192 322 L163 325 Z" fill="#4a3c26" />
+          <path d="M157 330 L189 330 L190 352 L162 354 Z" fill="url(#robotSteel)" stroke="#202a30" stroke-width="3" />
+          <circle cx="174" cy="370" r="17" fill="url(#robotSteel)" stroke="#d7ae4c" stroke-width="4" />
+          <path d="M160 385 L188 385 L196 437 L195 467 L167 478 L149 467 L152 447 Z" fill="url(#robotGoldLight)" stroke="#f1cf68" stroke-width="3" />
+          <path d="M161 403 L189 399 L192 431 L164 432 Z" fill="#34434a" stroke="#1b262d" stroke-width="3" />
+          <path d="M155 463 L195 463 L204 478 L205 491 L149 491 L143 480 Z" fill="url(#robotSteel)" stroke="#d5aa45" stroke-width="3" />
+          <path d="M151 480 L196 480" stroke="#e9c65e" stroke-width="3" />
+        </g>
+        <path d="M119 246 L181 246 L190 281 L174 303 L126 303 L110 281 Z" fill="url(#robotSteel)" stroke="#d8ad4c" stroke-width="4" />
+        <path d="M132 259 L168 259 L172 282 L150 293 L128 282 Z" fill="#2a3539" stroke="#f0ca5d" stroke-width="2" />
+        <g class="robot-intro__arm robot-intro__arm--left">
+          <path d="M102 129 L81 136 L68 178 L76 198 L96 190 L111 155 Z" fill="url(#robotGold)" stroke="#f1cf68" stroke-width="3" />
+          <path d="M73 174 L60 185 L52 227 L63 241 L82 231 L88 196 Z" fill="url(#robotSteel)" stroke="#d2a746" stroke-width="3" />
+          <circle cx="74" cy="193" r="12" fill="#18252c" stroke="#edc95a" stroke-width="4" />
+          <path d="M56 233 L78 231 L78 257 L68 273 L58 262 L51 247 Z" fill="url(#robotGoldLight)" stroke="#f1cf68" stroke-width="3" />
+          <path d="M57 259 L52 272 M66 263 L64 278 M75 257 L77 271" stroke="#29363b" stroke-width="5" stroke-linecap="round" />
+          <circle cx="96" cy="143" r="23" fill="url(#robotGoldLight)" stroke="#f5d875" stroke-width="4" />
+          <path d="M80 132 L98 119 L111 133 L103 158 L85 160 Z" fill="#344149" stroke="#f1ca59" stroke-width="3" />
+        </g>
+        <g class="robot-intro__arm robot-intro__arm--right">
+          <path d="M198 129 L219 136 L232 178 L224 198 L204 190 L189 155 Z" fill="url(#robotGold)" stroke="#f1cf68" stroke-width="3" />
+          <path d="M227 174 L240 185 L248 227 L237 241 L218 231 L212 196 Z" fill="url(#robotSteel)" stroke="#d2a746" stroke-width="3" />
+          <circle cx="226" cy="193" r="12" fill="#18252c" stroke="#edc95a" stroke-width="4" />
+          <path d="M244 233 L222 231 L222 257 L232 273 L242 262 L249 247 Z" fill="url(#robotGoldLight)" stroke="#f1cf68" stroke-width="3" />
+          <path d="M243 259 L248 272 M234 263 L236 278 M225 257 L223 271" stroke="#29363b" stroke-width="5" stroke-linecap="round" />
+          <circle cx="204" cy="143" r="23" fill="url(#robotGoldLight)" stroke="#f5d875" stroke-width="4" />
+          <path d="M220 132 L202 119 L189 133 L197 158 L215 160 Z" fill="#344149" stroke="#f1ca59" stroke-width="3" />
+        </g>
+        <path d="M126 90 L174 90 L184 111 L204 124 L194 205 L180 254 L120 254 L106 205 L96 124 L116 111 Z" fill="url(#robotGold)" stroke="#ffe17a" stroke-width="4" />
+        <path d="M116 126 L150 111 L184 126 L178 166 L150 180 L122 166 Z" fill="url(#robotSteel)" stroke="#f4d36a" stroke-width="4" />
+        <path d="M126 130 L150 120 L174 130 L171 158 L150 168 L129 158 Z" fill="#17232b" stroke="#c89d3e" stroke-width="2" />
+        <path d="M132 138 L168 138 L166 155 L150 162 L134 155 Z" fill="url(#robotGoldLight)" />
+        <text x="150" y="151" fill="#25313a" font-family="Arial,sans-serif" font-size="10" font-weight="900" text-anchor="middle" letter-spacing="1">SSR</text>
+        <path d="M119 181 L181 181 L175 225 L150 239 L125 225 Z" fill="#39454b" stroke="#d3aa4d" stroke-width="3" />
+        <path d="M128 190 L172 190 M130 201 L170 201 M133 212 L167 212" stroke="#d9b451" stroke-width="3" />
+        <path d="M136 238 L164 238 L172 260 L128 260 Z" fill="url(#robotSteel)" stroke="#e4bd55" stroke-width="3" />
+        <path d="M140 255 L150 266 L160 255" fill="none" stroke="#f4d574" stroke-width="3" />
+        <path d="M136 83 L164 83 L164 103 L136 103 Z" fill="url(#robotSteel)" stroke="#bd963f" stroke-width="3" />
+        <path d="M122 39 L130 17 L170 17 L178 39 L174 82 L161 96 L139 96 L126 82 Z" fill="url(#robotGold)" stroke="#ffe17a" stroke-width="4" />
+        <path d="M127 43 L150 31 L173 43 L170 69 L150 79 L130 69 Z" fill="url(#robotVisor)" stroke="#f1d16b" stroke-width="3" />
+        <path d="M132 48 L146 44 L145 58 L132 61 Z M155 44 L169 48 L168 61 L155 58 Z" fill="#83e7ff" filter="url(#robotGlow)" />
+        <path d="M136 76 L164 76 L160 85 L140 85 Z" fill="#28343b" stroke="#edc65d" stroke-width="2" />
+        <circle cx="119" cy="51" r="8" fill="#6e7c7d" stroke="#f2cf5e" stroke-width="3" />
+        <circle cx="181" cy="51" r="8" fill="#6e7c7d" stroke="#f2cf5e" stroke-width="3" />
+        <path d="M144 8 L156 8 L160 18 L140 18 Z" fill="#e1bc53" />
+      </svg>
+      <img class="robot-intro__body robot-intro__body--pose-a" src="/assets/ssr-humanoid-walk-a.png" alt="" />
+      <img class="robot-intro__body robot-intro__body--pose-b" src="/assets/ssr-humanoid-walk-b.png" alt="" />
+    </div>
+    <div class="robot-intro__mist" aria-hidden="true"></div>
+    <div class="robot-intro__door robot-intro__door--left"><img src="/assets/ssr-gate.jpg" alt="" fetchpriority="high" /></div>
+    <div class="robot-intro__door robot-intro__door--right"><img src="/assets/ssr-gate.jpg" alt="" fetchpriority="high" /></div>
+    <div class="robot-intro__brand">SSR · ROBOTICS</div>
+    <button class="robot-intro__skip" id="skipRobotIntro" type="button">건너뛰기</button>
+  </div>
   <header class="site-header">
     <a class="brand" href="/" aria-label="SSR 회사 홈페이지">
       <span class="brand-mark">SS<span>R★</span></span>
@@ -315,5 +723,39 @@
       <a class="footer-link" href="/ssr.html">업무용 대시보드</a>
     </div>
   </footer>
+  <script>
+    (() => {
+      const intro = document.querySelector("#robotIntro");
+      const skip = document.querySelector("#skipRobotIntro");
+      const preview = new URLSearchParams(window.location.search).get("introPreview") === "1";
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reducedMotion) return;
+      const gateImage = intro.querySelector(".robot-intro__door--left img");
+      const updateDoorSplit = () => {
+        const { naturalWidth, naturalHeight } = gateImage;
+        if (!naturalWidth || !naturalHeight) return;
+        const scale = Math.max(window.innerWidth / naturalWidth, window.innerHeight / naturalHeight);
+        const renderedWidth = naturalWidth * scale;
+        const cropLeft = (renderedWidth - window.innerWidth) / 2;
+        const seamPosition = 0.54 * renderedWidth - cropLeft;
+        intro.style.setProperty("--door-split", `${seamPosition}px`);
+      };
+      updateDoorSplit();
+      gateImage.addEventListener("load", updateDoorSplit, { once: true });
+      window.addEventListener("resize", updateDoorSplit, { passive: true });
+      intro.classList.add("is-preview", "is-active");
+      intro.setAttribute("aria-hidden", "false");
+      const closeIntro = () => {
+        if (!intro.classList.contains("is-active")) return;
+        intro.classList.add("is-leaving");
+        window.setTimeout(() => {
+          intro.classList.remove("is-active", "is-leaving");
+          intro.setAttribute("aria-hidden", "true");
+        }, 950);
+      };
+      skip.addEventListener("click", closeIntro);
+      window.setTimeout(closeIntro, preview ? 30000 : 11500);
+    })();
+  </script>
 </body>
 </html>
