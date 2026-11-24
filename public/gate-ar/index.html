@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#05090e" />
+  <title>SSR 정문 AR</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: Pretendard, "Noto Sans KR", system-ui, sans-serif;
+      background: #05090e;
+      color: #f5f7fa;
+    }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    button { font: inherit; }
+    #stage { position: fixed; inset: 0; overflow: hidden; background: #080e14; }
+    #camera {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity .35s ease;
+    }
+    #stage.camera-on #camera { opacity: 1; }
+    .camera-shade {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(1,5,9,.38), transparent 28%, transparent 65%, rgba(1,5,9,.42));
+    }
+    .brand {
+      position: absolute;
+      z-index: 8;
+      top: max(20px, env(safe-area-inset-top));
+      left: 20px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .22em;
+      text-shadow: 0 2px 10px #000;
+    }
+    .start-card {
+      position: absolute;
+      z-index: 10;
+      top: 50%;
+      left: 50%;
+      width: min(440px, calc(100% - 36px));
+      padding: 28px 24px 24px;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 22px;
+      background: rgba(8,15,22,.86);
+      box-shadow: 0 24px 90px rgba(0,0,0,.5);
+      text-align: center;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+    .start-card__mark {
+      display: grid;
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 18px;
+      place-items: center;
+      border: 1px solid rgba(255,215,112,.7);
+      border-radius: 50%;
+      color: #f4cf67;
+      font-size: 25px;
+      font-weight: 900;
+      box-shadow: 0 0 32px rgba(238,188,70,.18), inset 0 0 18px rgba(238,188,70,.12);
+    }
+    .start-card h1 { margin: 0; font-size: 23px; letter-spacing: -.04em; }
+    .start-card p {
+      margin: 12px 0 22px;
+      color: #c1cad2;
+      font-size: 14px;
+      line-height: 1.7;
+      word-break: keep-all;
+    }
+    .start-card__note {
+      display: block;
+      margin-top: 13px;
+      color: #9daab5;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+    .primary-button, .home-button {
+      min-height: 50px;
+      padding: 0 22px;
+      border: 0;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #f8d978, #b88128);
+      color: #17130b;
+      font-size: 15px;
+      font-weight: 850;
+      cursor: pointer;
+      box-shadow: 0 8px 26px rgba(195,142,43,.25);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .primary-button { width: 100%; }
+    .primary-button:disabled { opacity: .6; cursor: wait; }
+    .home-button {
+      position: absolute;
+      z-index: 9;
+      right: 18px;
+      bottom: max(20px, env(safe-area-inset-bottom));
+      min-height: 42px;
+      padding: 0 17px;
+      border: 1px solid rgba(255,255,255,.5);
+      background: rgba(0,0,0,.55);
+      color: #fff;
+      box-shadow: none;
+      font-size: 13px;
+    }
+    .scan-hint {
+      position: absolute;
+      z-index: 5;
+      top: max(74px, calc(env(safe-area-inset-top) + 60px));
+      left: 50%;
+      width: max-content;
+      max-width: calc(100% - 40px);
+      padding: 10px 15px;
+      transform: translateX(-50%);
+      border: 1px solid rgba(255,255,255,.23);
+      border-radius: 999px;
+      background: rgba(0,0,0,.56);
+      color: #fff;
+      font-size: 13px;
+      text-align: center;
+      text-shadow: 0 1px 5px #000;
+      backdrop-filter: blur(8px);
+    }
+    .scan-guide {
+      position: absolute;
+      z-index: 4;
+      top: 50%;
+      left: 50%;
+      width: min(36vw, 190px);
+      aspect-ratio: 1;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(255,255,255,.45);
+      border-radius: 18px;
+      box-shadow: 0 0 0 999px rgba(0,0,0,.08), inset 0 0 24px rgba(255,255,255,.08);
+      pointer-events: none;
+    }
+    .scan-guide::before, .scan-guide::after {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #f6d46f, #fff 50%, #f6d46f) border-box;
+      -webkit-mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: .85;
+    }
+    .scan-guide::after { inset: -5px; border-width: 1px; opacity: .25; }
+    .status {
+      position: absolute;
+      z-index: 8;
+      left: 50%;
+      bottom: max(82px, calc(env(safe-area-inset-bottom) + 72px));
+      max-width: calc(100% - 40px);
+      padding: 9px 14px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: rgba(0,0,0,.58);
+      color: #f7f8fa;
+      font-size: 12px;
+      text-align: center;
+    }
+    .status[hidden], .scan-hint[hidden], .scan-guide[hidden] { display: none; }
+    .error-message {
+      display: none;
+      margin-top: 14px;
+      color: #ffb6a8;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .error-message.is-visible { display: block; }
+    .opening {
+      position: absolute;
+      z-index: 2;
+      left: var(--gate-left, 50%);
+      top: var(--gate-top, 10%);
+      width: var(--gate-width, 0px);
+      height: var(--gate-height, 80%);
+      transform: scaleX(.02);
+      transform-origin: center;
+      opacity: 0;
+      background:
+        radial-gradient(ellipse at 50% 46%, rgba(78,187,233,.68), rgba(11,37,55,.93) 42%, rgba(2,7,12,.98) 78%),
+        #030910;
+      box-shadow: 0 0 28px rgba(89,200,245,.75), 0 0 90px rgba(49,147,198,.45);
+      clip-path: polygon(16% 0, 84% 0, 100% 100%, 0 100%);
+      pointer-events: none;
+    }
+    .door-panel {
+      position: absolute;
+      z-index: 3;
+      top: var(--gate-top, 10%);
+      width: var(--half-width, 0px);
+      height: var(--gate-height, 80%);
+      opacity: 0;
+      border: 1px solid rgba(255,255,255,.55);
+      background:
+        linear-gradient(90deg, rgba(31,39,43,.85), rgba(220,224,220,.94) 12%, rgba(176,183,181,.92) 48%, rgba(245,245,238,.92) 83%, rgba(44,52,55,.9)),
+        repeating-linear-gradient(90deg, #9ea4a3 0 3px, #d9dbd5 4px 8px, #838a8b 9px 10px);
+      box-shadow: inset 0 0 22px rgba(0,0,0,.22), 0 3px 22px rgba(0,0,0,.4);
+      pointer-events: none;
+    }
+    .door-panel::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .28;
+      background: repeating-linear-gradient(90deg, transparent 0 7px, rgba(30,39,42,.52) 8px, transparent 10px 15px);
+    }
+    .door-panel--left { left: var(--gate-left, 50%); transform-origin: right center; }
+    .door-panel--right { left: calc(var(--gate-left, 50%) + var(--half-width, 0px)); transform-origin: left center; }
+    .robot {
+      position: absolute;
+      z-index: 4;
+      left: var(--robot-x, 50%);
+      top: var(--robot-top, 24%);
+      height: var(--robot-height, min(70vh, 560px));
+      width: auto;
+      transform: translateX(-50%) scale(.12);
+      transform-origin: 50% 100%;
+      opacity: 0;
+      filter: drop-shadow(0 14px 22px rgba(0,0,0,.72)) drop-shadow(0 0 18px rgba(115,202,242,.38));
+      pointer-events: none;
+    }
+    .robot svg { display: block; height: 100%; width: auto; overflow: visible; }
+    .robot .leg, .robot .arm { transform-box: view-box; }
+    .robot .leg--left { transform-origin: 124px 300px; }
+    .robot .leg--right { transform-origin: 176px 300px; }
+    .robot .arm--left { transform-origin: 96px 142px; }
+    .robot .arm--right { transform-origin: 204px 142px; }
+    .is-opening .opening { animation: breach-open .8s .12s cubic-bezier(.2,.8,.2,1) forwards; }
+    .is-opening .door-panel { opacity: 1; }
+    .is-opening .door-panel--left { animation: gate-left .9s .35s cubic-bezier(.55,.05,.2,1) forwards; }
+    .is-opening .door-panel--right { animation: gate-right .9s .35s cubic-bezier(.55,.05,.2,1) forwards; }
+    .is-opening .robot { animation: robot-emerge 2.8s .7s cubic-bezier(.18,.75,.22,1) forwards; }
+    .is-opening .robot .leg--left, .is-opening .robot .arm--right { animation: walk-left .58s .7s ease-in-out 5; }
+    .is-opening .robot .leg--right, .is-opening .robot .arm--left { animation: walk-right .58s .7s ease-in-out 5; }
+    .is-opening .robot svg { animation: robot-bob .58s .7s ease-in-out 5; }
+    .whiteout {
+      position: absolute;
+      z-index: 20;
+      inset: 0;
+      background: #fff;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .is-finishing .whiteout { animation: whiteout .95s ease forwards; }
+    @keyframes breach-open {
+      0% { opacity: 0; transform: scaleX(.02); }
+      20% { opacity: 1; }
+      100% { opacity: 1; transform: scaleX(1); }
+    }
+    @keyframes gate-left { to { transform: translateX(calc(0px - var(--half-width))); } }
+    @keyframes gate-right { to { transform: translateX(var(--half-width)); } }
+    @keyframes robot-emerge {
+      0% { opacity: 0; transform: translateX(-50%) translateY(5%) scale(.12); }
+      18% { opacity: 1; }
+      100% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+    }
+    @keyframes walk-left { 0%,100% { transform: rotate(12deg); } 50% { transform: rotate(-12deg); } }
+    @keyframes walk-right { 0%,100% { transform: rotate(-12deg); } 50% { transform: rotate(12deg); } }
+    @keyframes robot-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    @keyframes whiteout { 0% { opacity: 0; } 48%,100% { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+  <main id="stage" aria-label="SSR 정문 증강현실 입장">
+    <video id="camera" autoplay muted playsinline aria-hidden="true"></video>
+    <div class="camera-shade" aria-hidden="true"></div>
+    <div class="brand">SSR · ROBOTICS</div>
+
+    <div class="opening" aria-hidden="true"></div>
+    <div class="door-panel door-panel--left" aria-hidden="true"></div>
+    <div class="door-panel door-panel--right" aria-hidden="true"></div>
+    <div class="robot" id="robot" aria-hidden="true">
+      <svg viewBox="0 0 280 520" role="presentation">
+        <defs>
+          <linearGradient id="armor" x1="0" x2="1" y1="0" y2="1">
+            <stop stop-color="#fff0ad"/><stop offset=".18" stop-color="#d9b357"/><stop offset=".43" stop-color="#76501f"/><stop offset=".72" stop-color="#e0bf6a"/><stop offset="1" stop-color="#58401e"/>
+          </linearGradient>
+          <linearGradient id="armor-light" x1="0" x2="1">
+            <stop stop-color="#70501f"/><stop offset=".45" stop-color="#ffe58a"/><stop offset="1" stop-color="#8b672d"/>
+          </linearGradient>
+          <linearGradient id="carbon" x1="0" x2="0" y1="0" y2="1">
+            <stop stop-color="#64747c"/><stop offset=".38" stop-color="#1b272d"/><stop offset="1" stop-color="#74818a"/>
+          </linearGradient>
+          <linearGradient id="visor" x1="0" x2="0" y1="0" y2="1">
+            <stop stop-color="#061522"/><stop offset=".5" stop-color="#1a6585"/><stop offset="1" stop-color="#07111a"/>
+          </linearGradient>
+          <filter id="eye-glow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <ellipse cx="140" cy="505" rx="72" ry="10" fill="#02060a" opacity=".8"/>
+        <g class="leg leg--left">
+          <path d="M111 273 140 270 146 328 134 365 103 360 98 324Z" fill="url(#armor)" stroke="#f3d982" stroke-width="3"/>
+          <path d="m101 297 35-5-2 22-33 7Z" fill="#443824"/>
+          <path d="m103 328 31-2-2 26-31 1Z" fill="url(#carbon)" stroke="#202a30" stroke-width="3"/>
+          <circle cx="119" cy="370" r="16" fill="url(#carbon)" stroke="#d4b35e" stroke-width="4"/>
+          <path d="m105 382 29 1 11 67-10 26-34-4-7-28Z" fill="url(#armor-light)" stroke="#f3d982" stroke-width="3"/>
+          <path d="m104 402 32 1-3 31-33-2Z" fill="url(#carbon)" stroke="#1b252b" stroke-width="3"/>
+          <path d="m99 468 38 1 12 20-5 12-57-1-2-12Z" fill="url(#carbon)" stroke="#d5b154" stroke-width="3"/>
+          <path d="m91 490 54 1" stroke="#f0d477" stroke-width="3"/>
+        </g>
+        <g class="leg leg--right">
+          <path d="m140 270 29 3 13 51-5 36-31 5-12-37Z" fill="url(#armor)" stroke="#f3d982" stroke-width="3"/>
+          <path d="m144 292 35 5 1 24-33-7Z" fill="#443824"/>
+          <path d="m146 326 31 2 2 25-31-1Z" fill="url(#carbon)" stroke="#202a30" stroke-width="3"/>
+          <circle cx="161" cy="370" r="16" fill="url(#carbon)" stroke="#d4b35e" stroke-width="4"/>
+          <path d="m146 383 29-1 13 62-7 28-34 4-10-26Z" fill="url(#armor-light)" stroke="#f3d982" stroke-width="3"/>
+          <path d="m145 403 32-1 4 30-33 2Z" fill="url(#carbon)" stroke="#1b252b" stroke-width="3"/>
+          <path d="m143 469 38-1 14 20-2 12-57 1-5-12Z" fill="url(#carbon)" stroke="#d5b154" stroke-width="3"/>
+          <path d="m143 491 54-1" stroke="#f0d477" stroke-width="3"/>
+        </g>
+        <path d="m110 247 60 0 11 33-16 20h-50l-16-20Z" fill="url(#carbon)" stroke="#d7b45b" stroke-width="4"/>
+        <path d="m124 258 32 0 7 19-23 13-23-13Z" fill="#243139" stroke="#f2d277" stroke-width="2"/>
+        <g class="arm arm--left">
+          <path d="m104 119-28 9-17 43 8 25 29-5 20-43Z" fill="url(#armor)" stroke="#f0d274" stroke-width="3"/>
+          <path d="m69 174-16 14-7 45 14 13 23-10 8-38Z" fill="url(#carbon)" stroke="#d0aa52" stroke-width="3"/>
+          <circle cx="65" cy="196" r="12" fill="#15222a" stroke="#ebcc69" stroke-width="4"/>
+          <path d="m53 238 28-4 0 28-14 17-17-13-5-15Z" fill="url(#armor-light)" stroke="#f3d982" stroke-width="3"/>
+          <path d="m52 261-6 15m18-14-2 19m13-24 2 16" stroke="#25323a" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="96" cy="138" r="23" fill="url(#carbon)" stroke="#f4d77d" stroke-width="5"/>
+          <path d="m79 124 25-8 13 15-12 22-22 2-10-14Z" fill="url(#armor)" stroke="#f0d274" stroke-width="3"/>
+          <path d="m94 126 12-4 7 8-7 14-14 1-6-9Z" fill="#242e32"/>
+        </g>
+        <g class="arm arm--right">
+          <path d="m176 119 28 9 17 43-8 25-29-5-20-43Z" fill="url(#armor)" stroke="#f0d274" stroke-width="3"/>
+          <path d="m211 174 16 14 7 45-14 13-23-10-8-38Z" fill="url(#carbon)" stroke="#d0aa52" stroke-width="3"/>
+          <circle cx="215" cy="196" r="12" fill="#15222a" stroke="#ebcc69" stroke-width="4"/>
+          <path d="m227 238-28-4v28l14 17 17-13 5-15Z" fill="url(#armor-light)" stroke="#f3d982" stroke-width="3"/>
+          <path d="m228 261 6 15m-18-14 2 19m-13-24-2 16" stroke="#25323a" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="184" cy="138" r="23" fill="url(#carbon)" stroke="#f4d77d" stroke-width="5"/>
+          <path d="m201 124-25-8-13 15 12 22 22 2 10-14Z" fill="url(#armor)" stroke="#f0d274" stroke-width="3"/>
+          <path d="m186 126-12-4-7 8 7 14 14 1 6-9Z" fill="#242e32"/>
+        </g>
+        <path d="m115 85 50 0 13 24 28 15-9 80-19 52h-76l-19-52-9-80 28-15Z" fill="url(#armor)" stroke="#ffe59a" stroke-width="4"/>
+        <path d="m102 123 38-17 38 17-5 45-33 17-33-17Z" fill="url(#carbon)" stroke="#f1d276" stroke-width="4"/>
+        <path d="m111 130 29-12 29 12-3 31-26 14-26-14Z" fill="#111d25" stroke="#c9a754" stroke-width="2"/>
+        <path d="m118 137 22-9 22 9-2 20-20 11-20-11Z" fill="url(#armor-light)"/>
+        <text x="140" y="152" fill="#17212a" font-family="Arial,sans-serif" font-size="9" font-weight="900" text-anchor="middle" letter-spacing="1">SSR</text>
+        <path d="m111 184 58 0-5 41-24 15-24-15Z" fill="#344148" stroke="#d2af59" stroke-width="3"/>
+        <path d="m121 193 38 0m-36 11 34 0m-31 11 28 0" stroke="#e0c365" stroke-width="3"/>
+        <path d="m126 237 28 0 10 22-24 16-24-16Z" fill="url(#carbon)" stroke="#e2c36d" stroke-width="3"/>
+        <path d="m117 90 23-16 23 16-5 27h-36Z" fill="url(#carbon)" stroke="#c8a951" stroke-width="3"/>
+        <path d="m119 35 8-21h26l8 21-4 49-9 12h-16l-9-12Z" fill="url(#armor)" stroke="#ffe49a" stroke-width="4"/>
+        <path d="m123 42 17-9 17 9-2 26-15 9-15-9Z" fill="url(#visor)" stroke="#f3d376" stroke-width="3"/>
+        <path d="m127 50 10-3-1 8-9 3Zm17-3 10 3v8l-9-3Z" fill="#8feaff" filter="url(#eye-glow)"/>
+        <path d="m130 77 20 0-4 8h-12Z" fill="#26353d" stroke="#dbbd66" stroke-width="2"/>
+        <circle cx="115" cy="49" r="7" fill="#202c31" stroke="#e4c15c" stroke-width="3"/>
+        <circle cx="165" cy="49" r="7" fill="#202c31" stroke="#e4c15c" stroke-width="3"/>
+        <path d="m136 8 8-5 8 5-2 8h-12Z" fill="#e1c263"/>
+      </svg>
+    </div>
+
+    <div class="scan-hint" id="scanHint" hidden>문 중앙에 붙일 QR 코드를 화면에 맞춰주세요</div>
+    <div class="scan-guide" id="scanGuide" hidden aria-hidden="true"></div>
+    <div class="status" id="status" role="status" aria-live="polite" hidden></div>
+    <section class="start-card" id="startCard">
+      <div class="start-card__mark" aria-hidden="true">SSR</div>
+      <h1>정문 AR 입장</h1>
+      <p>카메라로 실제 정문을 비추면<br>SSR 아머 로봇이 문을 열고 걸어나옵니다.</p>
+      <button class="primary-button" id="startCamera" type="button">카메라로 정문 비추기</button>
+      <span class="start-card__note">카메라 권한은 시작 버튼을 누른 뒤에만 요청합니다.<br>화면 속 QR이 인식되면 AR 장면이 시작됩니다.</span>
+      <div class="error-message" id="cameraError" role="alert"></div>
+    </section>
+    <button class="home-button" id="skip" type="button">홈페이지로 이동</button>
+    <div class="whiteout" aria-hidden="true"></div>
+  </main>
+  <canvas id="decoder" hidden></canvas>
+  <script src="/assets/jsqr-1.4.0.min.js"></script>
+  <script>
+    (() => {
+      const stage = document.querySelector("#stage");
+      const video = document.querySelector("#camera");
+      const canvas = document.querySelector("#decoder");
+      const context = canvas.getContext("2d", { willReadFrequently: true });
+      const startButton = document.querySelector("#startCamera");
+      const startCard = document.querySelector("#startCard");
+      const cameraError = document.querySelector("#cameraError");
+      const status = document.querySelector("#status");
+      const scanHint = document.querySelector("#scanHint");
+      const scanGuide = document.querySelector("#scanGuide");
+      const skipButton = document.querySelector("#skip");
+      const robot = document.querySelector("#robot");
+      let stream;
+      let scanTimer;
+      let started = false;
+      let sequenceStarted = false;
+
+      const expectedUrl = new URL("/gate-ar/", "https://ssr.ai.kr");
+      function isGateQr(value) {
+        try {
+          const url = new URL(value);
+          return url.origin === expectedUrl.origin && url.pathname.replace(/\/+$/, "") === "/gate-ar";
+        } catch {
+          return false;
+        }
+      }
+
+      function showStatus(message) {
+        status.textContent = message;
+        status.hidden = false;
+      }
+
+      function positionScene(location) {
+        const rect = video.getBoundingClientRect();
+        const scale = Math.max(rect.width / video.videoWidth, rect.height / video.videoHeight);
+        const offsetX = (rect.width - video.videoWidth * scale) / 2;
+        const offsetY = (rect.height - video.videoHeight * scale) / 2;
+        const decodeToVideo = video.videoWidth / canvas.width;
+        const points = [
+          location.topLeftCorner,
+          location.topRightCorner,
+          location.bottomRightCorner,
+          location.bottomLeftCorner
+        ].map(point => ({ x: point.x * decodeToVideo, y: point.y * decodeToVideo }));
+        const toScreen = point => ({
+          x: point.x * scale + offsetX,
+          y: point.y * scale + offsetY
+        });
+        const screenPoints = points.map(toScreen);
+        const centerX = screenPoints.reduce((sum, point) => sum + point.x, 0) / screenPoints.length;
+        const centerY = screenPoints.reduce((sum, point) => sum + point.y, 0) / screenPoints.length;
+        const topSize = Math.hypot(screenPoints[1].x - screenPoints[0].x, screenPoints[1].y - screenPoints[0].y);
+        const sideSize = Math.hypot(screenPoints[3].x - screenPoints[0].x, screenPoints[3].y - screenPoints[0].y);
+        const qrSize = Math.max(24, (topSize + sideSize) / 2);
+        const gateWidth = Math.min(qrSize * 24, rect.width * 1.2);
+        const halfWidth = gateWidth / 2;
+        const gateHeight = Math.min(qrSize * 20, rect.height * 1.2);
+        const gateTop = Math.max(-rect.height * .1, centerY - gateHeight * .34);
+        const robotHeight = Math.min(qrSize * 7.2, rect.height * .88);
+        const robotBottom = centerY + qrSize * 2.15;
+        const robotTop = Math.max(-robotHeight * .04, robotBottom - robotHeight);
+        stage.style.setProperty("--gate-left", `${centerX - halfWidth}px`);
+        stage.style.setProperty("--gate-top", `${gateTop}px`);
+        stage.style.setProperty("--gate-width", `${gateWidth}px`);
+        stage.style.setProperty("--gate-height", `${gateHeight}px`);
+        stage.style.setProperty("--half-width", `${halfWidth}px`);
+        stage.style.setProperty("--robot-x", `${centerX}px`);
+        stage.style.setProperty("--robot-top", `${robotTop}px`);
+        stage.style.setProperty("--robot-height", `${robotHeight}px`);
+      }
+
+      function stopCamera() {
+        window.clearTimeout(scanTimer);
+        if (stream) {
+          stream.getTracks().forEach(track => track.stop());
+          stream = undefined;
+        }
+        video.srcObject = null;
+      }
+
+      function finish() {
+        stopCamera();
+        stage.classList.add("is-finishing");
+        window.setTimeout(() => {
+          window.location.replace("/?skipIntro=1");
+        }, 980);
+      }
+
+      function beginSequence(location) {
+        if (sequenceStarted) return;
+        sequenceStarted = true;
+        positionScene(location);
+        scanGuide.hidden = true;
+        scanHint.hidden = true;
+        showStatus("정문 QR 인식 완료 · AR 장면을 시작합니다");
+        stage.classList.add("is-opening");
+        window.setTimeout(() => showStatus("SSR 로봇이 정문을 통과하고 있습니다"), 900);
+        window.setTimeout(finish, 5200);
+      }
+
+      function scanFrame() {
+        if (!started || sequenceStarted || video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
+          scanTimer = window.setTimeout(scanFrame, 250);
+          return;
+        }
+        const width = 640;
+        const ratio = Math.min(1, width / video.videoWidth);
+        canvas.width = Math.round(video.videoWidth * ratio);
+        canvas.height = Math.round(video.videoHeight * ratio);
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const image = context.getImageData(0, 0, canvas.width, canvas.height);
+        const code = window.jsQR(image.data, image.width, image.height, { inversionAttempts: "attemptBoth" });
+        if (code && isGateQr(code.data)) {
+          beginSequence(code.location);
+          return;
+        }
+        showStatus("정문 중앙 이음새의 SSR 입장 QR을 화면에 맞춰주세요");
+        scanTimer = window.setTimeout(scanFrame, 140);
+      }
+
+      async function startCamera() {
+        cameraError.classList.remove("is-visible");
+        startButton.disabled = true;
+        startButton.textContent = "카메라 연결 중…";
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.jsQR) {
+          cameraError.textContent = "이 브라우저에서 카메라 AR을 시작할 수 없습니다. 최신 모바일 브라우저에서 다시 접속해 주세요.";
+          cameraError.classList.add("is-visible");
+          startButton.disabled = false;
+          startButton.textContent = "다시 시도";
+          return;
+        }
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: {
+              facingMode: { ideal: "environment" },
+              width: { ideal: 1280 },
+              height: { ideal: 720 }
+            }
+          });
+          video.srcObject = stream;
+          await video.play();
+          started = true;
+          stage.classList.add("camera-on");
+          startCard.hidden = true;
+          scanHint.hidden = false;
+          scanGuide.hidden = false;
+          skipButton.textContent = "건너뛰기";
+          showStatus("문 중앙 이음새의 SSR 입장 QR을 화면에 맞춰주세요");
+          scanFrame();
+        } catch (error) {
+          const denied = error && (error.name === "NotAllowedError" || error.name === "PermissionDeniedError");
+          cameraError.textContent = denied
+            ? "카메라 권한이 필요합니다. 브라우저 설정에서 카메라 접근을 허용한 뒤 다시 시도해 주세요."
+            : "카메라를 시작하지 못했습니다. 권한과 카메라 연결을 확인해 주세요.";
+          cameraError.classList.add("is-visible");
+          startButton.disabled = false;
+          startButton.textContent = "다시 시도";
+        }
+      }
+
+      startButton.addEventListener("click", startCamera);
+      skipButton.addEventListener("click", finish);
+      window.addEventListener("pagehide", stopCamera, { once: true });
+    })();
+  </script>
+</body>
+</html>
