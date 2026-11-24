@@ -353,7 +353,9 @@
     .notice a { display: none; }
     .hero {
       min-height: calc(100vh - 38px);
-      background: linear-gradient(135deg, #10233f, #1d4e89);
+      background:
+        linear-gradient(90deg, rgba(4,13,30,.78) 0%, rgba(4,13,30,.48) 48%, rgba(4,13,30,.18) 100%),
+        url("assets/ssr-hero.jpg") center center / cover no-repeat;
     }
     .hero::after { display: none; }
     .site-header {
@@ -366,11 +368,11 @@
       min-height: calc(100vh - 110px);
       padding: 64px 7vw 80px;
       align-items: flex-start;
-      justify-content: center;
+      justify-content: flex-start;
     }
     .copy {
-      width: min(100%, 980px);
-      margin: 0;
+      width: min(100%, 900px);
+      margin: 2vh 0 0;
     }
     .eyebrow { margin-bottom: 12px; }
     h1 { font-size: clamp(38px, 5vw, 58px); letter-spacing: -2px; }
@@ -379,27 +381,27 @@
     .hero-cta {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
+      gap: 10px;
       margin-top: 34px;
     }
     .cta {
-      min-height: 104px;
-      padding: 23px 24px;
+      min-height: 74px;
+      padding: 18px 20px;
       display: flex;
-      flex-direction: column;
-      align-items: flex-start;
+      flex-direction: row;
+      align-items: center;
       justify-content: center;
-      gap: 8px;
-      border: 1px solid rgba(255,255,255,.22);
-      border-radius: 12px;
-      background: rgba(255,255,255,.1);
+      gap: 12px;
+      border: 1px solid rgba(255,255,255,.7);
+      border-radius: 0;
+      background: rgba(3,12,28,.5);
       text-align: left;
-      font-size: 18px;
-      transition: background .2s ease, transform .2s ease;
+      font-size: 16px;
+      transition: background .2s ease, color .2s ease;
     }
-    .cta.primary { border-color: #fff; background: #fff; color: #10233f; }
-    .cta:hover { transform: translateY(-2px); background: #fff; border-color: #fff; color: #10233f; }
-    .cta small { font-size: 13px; font-weight: 500; opacity: .76; }
+    .cta.primary { border-color: var(--ssr-blue); background: var(--ssr-blue); color: #fff; }
+    .cta:hover { background: #fff; border-color: #fff; color: var(--ssr-deep); }
+    .cta small { margin-left: auto; font-size: 12px; font-weight: 500; opacity: .76; white-space: nowrap; }
     .scroll-guide { display: none; }
     .section, footer { display: none; }
 
@@ -409,8 +411,8 @@
       .brand-copy { display: block; }
       .hero { min-height: calc(100vh - 38px); }
       .hero-content { min-height: calc(100vh - 110px); padding: 48px 22px 56px; }
-      .hero-cta { grid-template-columns: 1fr; gap: 12px; margin-top: 28px; }
-      .cta { min-height: 82px; padding: 17px 20px; }
+      .hero-cta { grid-template-columns: 1fr; gap: 8px; margin-top: 28px; }
+      .cta { min-height: 64px; padding: 15px 16px; }
     }
   </style>
 </head>
