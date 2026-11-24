@@ -84,11 +84,16 @@
     height: 58px;
     display: grid;
     place-items: center;
-    font-size: 54px;
     line-height: 1;
     transform-origin: center;
     filter: drop-shadow(0 5px 4px rgba(0,0,0,.18));
     z-index: 4;
+  }
+
+  #shark svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
   }
 
   .name {
@@ -529,7 +534,17 @@
 
     <div id="shark">
       <div class="name">부캉이</div>
-      🦈
+      <svg viewBox="0 0 100 70" role="img" aria-label="부캉이 물고기">
+        <path d="M75 35 96 17 94 35 96 53 75 37Z" fill="#2879a8" stroke="#174e77" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M13 35C25 19 51 15 77 25L82 35 77 45C51 55 25 51 13 35Z" fill="#55c9e8" stroke="#174e77" stroke-width="2.5"/>
+        <path d="M36 21 47 7 59 20M43 49 53 61 63 47" fill="#3195c4" stroke="#174e77" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M20 39C35 47 58 47 75 40L77 44C56 55 31 51 19 43Z" fill="#e8fbff"/>
+        <path d="M29 30 33 37M36 28 40 37M43 27 47 36" fill="none" stroke="#2879a8" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="23" cy="30" r="4" fill="white"/>
+        <circle cx="22" cy="30" r="2" fill="#123d5c"/>
+        <circle cx="21.4" cy="29.3" r=".7" fill="white"/>
+        <path d="M13 36Q8 38 12 41" fill="none" stroke="#174e77" stroke-width="2" stroke-linecap="round"/>
+      </svg>
     </div>
 
     <div id="gameOver">
