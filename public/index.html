@@ -693,7 +693,7 @@
       z-index: 1;
       top: 0;
       bottom: 0;
-      width: 50%;
+      width: var(--door-split, 50%);
       overflow: hidden;
       background: #899093;
       will-change: transform;
@@ -702,7 +702,7 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 200%;
+      width: 100vw;
       height: 100%;
       object-fit: cover;
       object-position: center;
@@ -710,30 +710,16 @@
       user-select: none;
       pointer-events: none;
     }
-    .robot-intro__door--right img { left: -100%; }
-    .robot-intro__door::before {
-      content: "";
-      position: absolute;
-      inset: 4.5% 7%;
-      border: 1px solid rgba(194,218,229,.32);
-      background:
-        radial-gradient(circle at 8% 5%, #b4c1c6 0 1.5px, #26343c 2px, transparent 4px),
-        radial-gradient(circle at 92% 5%, #b4c1c6 0 1.5px, #26343c 2px, transparent 4px),
-        radial-gradient(circle at 8% 95%, #b4c1c6 0 1.5px, #26343c 2px, transparent 4px),
-        radial-gradient(circle at 92% 95%, #b4c1c6 0 1.5px, #26343c 2px, transparent 4px),
-        linear-gradient(90deg, rgba(0,0,0,.24), rgba(188,211,222,.07) 16%, transparent 48%, rgba(0,0,0,.18)),
-        linear-gradient(180deg, rgba(255,255,255,.1), transparent 3%, transparent 97%, rgba(0,0,0,.28));
-      box-shadow: inset 0 0 0 3px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.1), 0 0 0 1px rgba(0,0,0,.28);
-      pointer-events: none;
+    .robot-intro__door--right img {
+      left: calc(0px - var(--door-split, 50vw));
     }
     .robot-intro__door--left {
       left: 0;
-      border-right: 2px solid rgba(0,0,0,.72);
       animation: door-open-left .95s .7s cubic-bezier(.65,0,.25,1) both;
     }
     .robot-intro__door--right {
-      left: 50%;
-      border-left: 2px solid rgba(0,0,0,.72);
+      left: var(--door-split, 50%);
+      width: calc(100% - var(--door-split, 50%));
       animation: door-open-right .95s .7s cubic-bezier(.65,0,.25,1) both;
     }
     .robot-intro__brand {
@@ -776,10 +762,10 @@
       pointer-events: none;
     }
     @keyframes door-open-left {
-      to { transform: translateX(-100%); }
+      to { transform: translateX(-80%); }
     }
     @keyframes door-open-right {
-      to { transform: translateX(100%); }
+      to { transform: translateX(80%); }
     }
     @keyframes robot-approach {
       0% { transform: translateX(-50%) scale(.34); }
@@ -820,17 +806,115 @@
       0%, 35% { opacity: 0; }
       50%, 100% { opacity: 1; }
     }
+    .robot-intro__scene::before,
+    .robot-intro__floor,
+    .robot-intro__figure { display: none !important; }
+    .robot-intro__scene { z-index: 0; background: #070b10; }
+    .robot-intro__scene::after {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 54%, rgba(1,5,11,.12) 68%, rgba(1,5,11,.48) 100%);
+      pointer-events: none;
+    }
+    .robot-intro__backdrop {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: brightness(.72) contrast(1.04) saturate(.88);
+    }
+    .robot-intro__robot {
+      z-index: 1;
+      left: calc(50% - 2vw);
+      top: auto;
+      bottom: 2vh;
+      width: min(26vh, 230px);
+      height: min(64vh, 560px);
+      max-width: 82vw;
+      transform: translate(-50%, 0) scale(.22);
+      transform-origin: 50% 70%;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,.68));
+      animation: robot-approach 9.5s 1.55s cubic-bezier(.42,0,.58,1) both;
+    }
+    .robot-intro__body {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+      pointer-events: none;
+      user-select: none;
+    }
+    .robot-intro__body--pose-a {
+      animation: robot-pose-a 1.2s 1.55s linear 8 both;
+    }
+    .robot-intro__body--pose-b {
+      animation: robot-pose-b 1.2s 1.55s linear 8 both;
+    }
+    .robot-intro__mist {
+      position: absolute;
+      z-index: 2;
+      right: -14%;
+      bottom: -7%;
+      left: -14%;
+      height: 43%;
+      opacity: .5;
+      filter: blur(28px);
+      background:
+        radial-gradient(ellipse at 20% 62%, rgba(220,232,238,.26), transparent 54%),
+        radial-gradient(ellipse at 55% 52%, rgba(190,211,221,.22), transparent 58%),
+        radial-gradient(ellipse at 84% 66%, rgba(220,232,238,.2), transparent 52%);
+      mix-blend-mode: screen;
+      pointer-events: none;
+      animation: floor-mist-drift 7s ease-in-out infinite alternate;
+    }
+    .robot-intro__door--left {
+      z-index: 3;
+      animation-delay: .25s;
+      animation-duration: 1.15s;
+    }
+    .robot-intro__door--right {
+      z-index: 3;
+      animation-delay: .25s;
+      animation-duration: 1.15s;
+    }
+    .robot-intro__brand { z-index: 4; }
+    .robot-intro__skip { z-index: 5; }
+    @keyframes robot-approach {
+      0% { transform: translate(-50%, 0) scale(.22); }
+      100% { transform: translate(-50%, 2.5vh) scale(.9); }
+    }
+    @keyframes robot-pose-a {
+      0%, 49.99% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    @keyframes robot-pose-b {
+      0%, 49.99% { opacity: 0; }
+      50%, 100% { opacity: 1; }
+    }
+    @keyframes floor-mist-drift {
+      from { transform: translateX(-3%) translateY(2%); opacity: .48; }
+      to { transform: translateX(3%) translateY(-3%); opacity: .74; }
+    }
     @media (min-width: 621px), (prefers-reduced-motion: reduce) {
-      .robot-intro { display: none !important; }
+      .robot-intro:not(.is-preview) { display: none !important; }
     }
   </style>
 </head>
 
 <body>
   <div class="robot-intro" id="robotIntro" aria-label="SSR 로봇 인트로" aria-hidden="true">
-    <div class="robot-intro__scene"><div class="robot-intro__floor"></div></div>
+    <div class="robot-intro__scene">
+      <img class="robot-intro__backdrop" src="/assets/ssr-robot-entry-scene.jpg" alt="" fetchpriority="high" />
+      <div class="robot-intro__floor"></div>
+    </div>
     <div class="robot-intro__robot" aria-hidden="true">
-      <svg class="robot-intro__figure" viewBox="0 0 300 500" role="presentation">
+      <svg class="robot-intro__figure" viewBox="0 0 300 500" role="presentation" hidden>
         <defs>
           <linearGradient id="robotGold" x1="0" x2="1" y1="0" y2="1">
             <stop offset="0" stop-color="#ffe2b7" />
@@ -918,7 +1002,10 @@
         <circle cx="181" cy="51" r="8" fill="#6e7c7d" stroke="#f2cf5e" stroke-width="3" />
         <path d="M144 8 L156 8 L160 18 L140 18 Z" fill="#e1bc53" />
       </svg>
+      <img class="robot-intro__body robot-intro__body--pose-a" src="/assets/ssr-humanoid-walk-a.png" alt="" />
+      <img class="robot-intro__body robot-intro__body--pose-b" src="/assets/ssr-humanoid-walk-b.png" alt="" />
     </div>
+    <div class="robot-intro__mist" aria-hidden="true"></div>
     <div class="robot-intro__door robot-intro__door--left"><img src="/assets/ssr-gate.jpg" alt="" fetchpriority="high" /></div>
     <div class="robot-intro__door robot-intro__door--right"><img src="/assets/ssr-gate.jpg" alt="" fetchpriority="high" /></div>
     <div class="robot-intro__brand">SSR · ROBOTICS</div>
@@ -1010,8 +1097,23 @@
       const intro = document.querySelector("#robotIntro");
       const skip = document.querySelector("#skipRobotIntro");
       const mobile = window.matchMedia("(max-width: 620px)").matches;
+      const preview = new URLSearchParams(window.location.search).get("introPreview") === "1";
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (!mobile || reducedMotion) return;
+      if ((!mobile && !preview) || reducedMotion) return;
+      const gateImage = intro.querySelector(".robot-intro__door--left img");
+      const updateDoorSplit = () => {
+        const { naturalWidth, naturalHeight } = gateImage;
+        if (!naturalWidth || !naturalHeight) return;
+        const scale = Math.max(window.innerWidth / naturalWidth, window.innerHeight / naturalHeight);
+        const renderedWidth = naturalWidth * scale;
+        const cropLeft = (renderedWidth - window.innerWidth) / 2;
+        const seamPosition = 0.54 * renderedWidth - cropLeft;
+        intro.style.setProperty("--door-split", `${seamPosition}px`);
+      };
+      updateDoorSplit();
+      gateImage.addEventListener("load", updateDoorSplit, { once: true });
+      window.addEventListener("resize", updateDoorSplit, { passive: true });
+      if (preview) intro.classList.add("is-preview");
       intro.classList.add("is-active");
       intro.setAttribute("aria-hidden", "false");
       const closeIntro = () => {
@@ -1023,7 +1125,7 @@
         }, 950);
       };
       skip.addEventListener("click", closeIntro);
-      window.setTimeout(closeIntro, 4700);
+      window.setTimeout(closeIntro, preview ? 30000 : 11500);
     })();
 
     const portal = document.querySelector(".hero");
