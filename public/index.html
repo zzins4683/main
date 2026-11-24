@@ -1026,8 +1026,7 @@
       const skip = document.querySelector("#skipRobotIntro");
       const mobile = window.matchMedia("(max-width: 620px)").matches;
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const skipIntro = new URLSearchParams(window.location.search).has("skipIntro");
-      if (!mobile || reducedMotion || skipIntro) return;
+      if (!mobile || reducedMotion) return;
       intro.classList.add("is-active");
       intro.setAttribute("aria-hidden", "false");
       const closeIntro = () => {
