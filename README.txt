@@ -3,6 +3,7 @@ SSR 홈페이지 HTML 뼈대
 파일 구성
 - index.html
 - assets/ssr-hero.jpg
+- robot-monitor/index.html (로봇 원격 모니터링 UI 시안, /robot-monitor/)
 - quote/index.html (견적서 메뉴, /quote/)
 - quote/customer/index.html (일반 고객용 표준 CSV 견적서, /quote/customer/)
 - quote/staff/index.html (직원용 얼마에요 CSV 견적서, /quote/staff/)
@@ -25,3 +26,5 @@ SSR 홈페이지 HTML 뼈대
 - 견적 공급자 상호 기본값은 (주)에스에스알이며 직접 수정 가능
 - 연락처·주소·실제 회사 로고는 기본 배포본에 아직 등록되지 않음
 - 공급자 프로필 저장은 현재 브라우저별 localStorage 방식이며 직원 공용 저장소가 아님
+- 로봇 모니터링 페이지는 관리자가 설치·등록한 대상 PC만 원격 접속하는 UI 시안이며, 실제 원격 연결·PLC 통신은 아직 구현되지 않음
+- 로봇 상태·알람·JOB 예시 데이터는 데모이며, 실제 연동은 장비별 컨트롤러/PLC 모델 및 읽기 인터페이스 확인 후 개발 필요
