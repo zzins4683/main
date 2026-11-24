@@ -154,6 +154,7 @@
       padding: 10px 14px;
       cursor: pointer;
     }
+    .erp-link { white-space: nowrap; }
     .menu-btn {
       width: 42px;
       height: 42px;
@@ -302,7 +303,7 @@
 
     /* 모바일 */
     @media (max-width: 980px) {
-      .nav, .outline-btn { display: none; }
+      .nav, .outline-btn:not(.erp-link) { display: none; }
 
       .hero {
         background-position: 58% center;
@@ -342,16 +343,82 @@
       .cta { min-width: 132px; padding: 12px 15px; }
       .section { padding: 72px 22px; }
     }
+
+    body { background: #f3f6fb; }
+    .notice {
+      min-height: 38px;
+      background: #10233f;
+      font-size: 12px;
+    }
+    .notice a { display: none; }
+    .hero {
+      min-height: calc(100vh - 38px);
+      background: linear-gradient(135deg, #10233f, #1d4e89);
+    }
+    .hero::after { display: none; }
+    .site-header {
+      height: 72px;
+      background: transparent;
+      border-bottom-color: rgba(255,255,255,.16);
+    }
+    .nav, .header-actions { display: none; }
+    .hero-content {
+      min-height: calc(100vh - 110px);
+      padding: 64px 7vw 80px;
+      align-items: flex-start;
+      justify-content: center;
+    }
+    .copy {
+      width: min(100%, 980px);
+      margin: 0;
+    }
+    .eyebrow { margin-bottom: 12px; }
+    h1 { font-size: clamp(38px, 5vw, 58px); letter-spacing: -2px; }
+    h1 span { margin-top: 12px; font-size: .42em; letter-spacing: -1px; }
+    .lead { margin-top: 18px; }
+    .hero-cta {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 34px;
+    }
+    .cta {
+      min-height: 104px;
+      padding: 23px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 12px;
+      background: rgba(255,255,255,.1);
+      text-align: left;
+      font-size: 18px;
+      transition: background .2s ease, transform .2s ease;
+    }
+    .cta.primary { border-color: #fff; background: #fff; color: #10233f; }
+    .cta:hover { transform: translateY(-2px); background: #fff; border-color: #fff; color: #10233f; }
+    .cta small { font-size: 13px; font-weight: 500; opacity: .76; }
+    .scroll-guide { display: none; }
+    .section, footer { display: none; }
+
+    @media (max-width: 600px) {
+      .notice { padding: 10px 20px; }
+      .site-header { padding: 0 22px; }
+      .brand-copy { display: block; }
+      .hero { min-height: calc(100vh - 38px); }
+      .hero-content { min-height: calc(100vh - 110px); padding: 48px 22px 56px; }
+      .hero-cta { grid-template-columns: 1fr; gap: 12px; margin-top: 28px; }
+      .cta { min-height: 82px; padding: 17px 20px; }
+    }
   </style>
 </head>
 
 <body>
   <div class="notice">
-    <div>
-      SSR AI Manufacturing Platform
-      <a href="#contact">프로젝트 문의하기</a>
-    </div>
-    <span>Mercury Robotics · Daegu, Korea</span>
+    <span>SSR 업무 대시보드</span>
+    <span>필요한 업무 서비스를 빠르게 열어보세요</span>
   </div>
 
   <main class="hero" id="home">
@@ -359,102 +426,25 @@
       <a class="brand" href="#home" aria-label="SSR 홈">
         <div class="brand-mark">SS<span>R★</span></div>
         <div class="brand-copy">
-          <strong>Mercury Robotics</strong>
-          <small>AI · ROBOTICS · AUTOMATION</small>
+          <strong>SSR 업무 대시보드</strong>
+          <small>BUSINESS DASHBOARD</small>
         </div>
       </a>
-
-      <nav class="nav" aria-label="주요 메뉴">
-        <a href="#about">회사소개</a>
-        <a href="#solution">사업영역</a>
-        <a href="#mercare">MERLINK</a>
-        <a href="#project">프로젝트</a>
-        <a href="#support">지원사업</a>
-        <a href="#contact">고객지원</a>
-      </nav>
-
-      <div class="header-actions">
-        <a class="outline-btn" href="/quote/">디지털 견적 →</a>
-        <button class="menu-btn" type="button" aria-label="전체 메뉴">☰</button>
-      </div>
     </header>
 
     <div class="hero-content">
       <section class="copy">
-        <p class="eyebrow">MERCURY ROBOTICS</p>
-        <h1>
-          AUTOMATION
-          <span>From Robot to AI Platform</span>
-        </h1>
-        <p class="lead">
-          SSR은 로봇, PLC, 비전, 데이터와 AI를 연결하여
-          제조 현장이 실제로 사용할 수 있는 자동화 생태계를 구축합니다.
-        </p>
+        <p class="eyebrow">WORKSPACE</p>
+        <h1>업무 바로가기<span>자주 사용하는 업무 서비스를 한곳에서 이용하세요.</span></h1>
         <div class="hero-cta">
-          <a class="cta primary" href="#solution">사업영역 보기</a>
-          <a class="cta" href="#project">프로젝트 보기</a>
-          <a class="cta" href="#mercare">MERCARE</a>
+          <a class="cta primary" href="https://ebook.iquest.co.kr/" target="_blank" rel="noopener noreferrer">얼마에요 4.0 ERP <small>새 창에서 열기 ↗</small></a>
+          <a class="cta" href="https://works365.co.kr/view/login" target="_blank" rel="noopener noreferrer">전자결재 <small>새 창에서 열기 ↗</small></a>
+          <a class="cta" href="https://office.iquest.co.kr/account/login.do">웹메일</a>
+          <a class="cta" href="https://naver.worksmobile.com/" target="_blank" rel="noopener noreferrer">일정 및 메신저 <small>새 창에서 열기 ↗</small></a>
+          <a class="cta" href="/quote/" target="_blank" rel="noopener noreferrer">디지털 견적 <small>새 창에서 열기 ↗</small></a>
         </div>
       </section>
     </div>
-
-    <a class="scroll-guide" href="#about">SCROLL</a>
   </main>
-
-  <section class="section" id="about">
-    <p class="section-label">ABOUT SSR</p>
-    <h2>기술을 만드는 것보다<br>기술을 연결해 가치를 만듭니다.</h2>
-    <div class="grid">
-      <article class="card"><b>All In One</b><p>자동화기계, 산업용 로봇, 컨설팅, 전기공사, 시스템 제어, 시운전.</p></article>
-      <article class="card"><b>Multi Robot</b><p>Yaskawa, FANUC, Hyundai, ABB, Kawasaki 등 다양한 로봇 대응.</p></article>
-      <article class="card"><b>Field Integration</b><p>PLC, HMI, Vision, Sensor, AI 플랫폼을 현장에 통합.</p></article>
-    </div>
-  </section>
-
-  <section class="section" id="solution">
-    <p class="section-label">SOLUTIONS</p>
-    <h2>AI · Robotics · Automation</h2>
-    <div class="grid">
-      <article class="card"><b>Robot Automation</b><p>주조, 팔레타이징, 도장, 조립, 검사 공정 자동화.</p></article>
-      <article class="card"><b>Smart Manufacturing</b><p>설비 데이터 수집, 대시보드, 생산정보 연계.</p></article>
-      <article class="card"><b>AI Integration</b><p>검증된 AI 플랫폼을 제조 현장에 적용하는 SI 서비스.</p></article>
-    </div>
-  </section>
-
-  <section class="section" id="mercare">
-    <p class="section-label">MERCARE</p>
-    <h2>Robot Care Subscription</h2>
-    <div class="grid">
-      <article class="card"><b>Predict</b><p>로봇 상태와 이상 징후를 데이터로 관리합니다.</p></article>
-      <article class="card"><b>Prevent</b><p>고장 전 점검과 부품 교체 판단을 지원합니다.</p></article>
-      <article class="card"><b>Support</b><p>계약 기간 동안 긴급 점검과 기술지원을 제공합니다.</p></article>
-    </div>
-  </section>
-
-  <section class="section" id="project">
-    <p class="section-label">PROJECT</p>
-    <h2>주요 프로젝트 영역</h2>
-    <div class="grid">
-      <article class="card"><b>Automotive</b><p>자동차 부품, 주조, 검사 및 후공정 자동화.</p></article>
-      <article class="card"><b>Factory Automation</b><p>산업용 로봇 기반 자동화 라인 설계 및 구축.</p></article>
-      <article class="card"><b>Government Project</b><p>AI·스마트제조 및 AI 지원사업 기술 수행 및 제안 협업.</p></article>
-    </div>
-  </section>
-
-  <section class="section" id="support">
-    <p class="section-label">GOVERNMENT SUPPORT</p>
-    <h2>지원사업 및 기술지원 문의</h2>
-    <p>수요기업의 공정 문제를 자동화 구조로 구체화하고, 수행 가능한 기술 범위를 설계합니다.</p>
-  </section>
-
-  <section class="section" id="contact">
-    <p class="section-label">CONTACT</p>
-    <h2>프로젝트를 시작합니다.</h2>
-    <p>주식회사 에스에스알 · Mercury Robotics</p>
-  </section>
-
-  <footer>
-    © 2026 SSR Co., Ltd. Mercury Robotics. All rights reserved.
-  </footer>
 </body>
 </html>
