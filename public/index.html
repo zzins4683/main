@@ -351,11 +351,38 @@
       opacity: 0;
       animation: intro-brand-in .5s 1.1s ease forwards;
     }
-    .robot-intro__skip {
+    .robot-intro__controls {
       position: absolute;
-      z-index: 3;
+      z-index: 5;
       right: 18px;
       bottom: max(20px, env(safe-area-inset-bottom));
+      left: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      font-size: 13px;
+    }
+    .robot-intro__daily {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.65);
+      cursor: pointer;
+    }
+    .robot-intro__daily input { width: 18px; height: 18px; margin: 0; accent-color: #1557bd; }
+    .robot-intro__error {
+      flex-basis: 100%;
+      margin: 0;
+      color: #fff;
+      text-align: right;
+      text-shadow: 0 1px 3px #000;
+    }
+    .robot-intro__error:empty { display: none; }
+    .robot-intro__skip {
       padding: 10px 15px;
       color: #fff;
       border: 1px solid rgba(255,255,255,.58);
@@ -501,7 +528,6 @@
       animation-duration: 1.15s;
     }
     .robot-intro__brand { z-index: 4; }
-    .robot-intro__skip { z-index: 5; }
     @keyframes robot-approach {
       0% { transform: translate(-50%, 0) scale(.22); }
       100% { transform: translate(-50%, 2.5vh) scale(.9); }
@@ -625,7 +651,11 @@
     <div class="robot-intro__door robot-intro__door--left"><img src="/assets/ssr-gate.jpg" alt="" fetchpriority="high" /></div>
     <div class="robot-intro__door robot-intro__door--right"><img src="/assets/ssr-gate.jpg" alt="" fetchpriority="high" /></div>
     <div class="robot-intro__brand">SSR · ROBOTICS</div>
-    <button class="robot-intro__skip" id="skipRobotIntro" type="button">건너뛰기</button>
+    <div class="robot-intro__controls">
+      <label class="robot-intro__daily"><input id="hideRobotIntroToday" type="checkbox" /> 오늘은 다시 보지 않기</label>
+      <button class="robot-intro__skip" id="skipRobotIntro" type="button">건너뛰기</button>
+      <p class="robot-intro__error" id="robotIntroStorageError" role="status"></p>
+    </div>
   </div>
   <header class="site-header">
     <a class="brand" href="/" aria-label="SSR 회사 홈페이지">
@@ -727,9 +757,34 @@
     (() => {
       const intro = document.querySelector("#robotIntro");
       const skip = document.querySelector("#skipRobotIntro");
+      const hideToday = document.querySelector("#hideRobotIntroToday");
+      const storageError = document.querySelector("#robotIntroStorageError");
       const preview = new URLSearchParams(window.location.search).get("introPreview") === "1";
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (reducedMotion) return;
+      const storageKey = "ssr-robot-intro-hidden-date";
+      const today = () => {
+        const now = new Date();
+        return [now.getFullYear(), now.getMonth() + 1, now.getDate()].join("-");
+      };
+      try {
+        if (localStorage.getItem(storageKey) === today()) return;
+      } catch (error) {
+        console.warn("Unable to read robot intro preference", error);
+        storageError.textContent = "브라우저 저장소를 사용할 수 없어 설정을 기억할 수 없습니다.";
+        hideToday.disabled = true;
+      }
+      hideToday.addEventListener("change", () => {
+        try {
+          if (hideToday.checked) localStorage.setItem(storageKey, today());
+          else localStorage.removeItem(storageKey);
+          storageError.textContent = "";
+        } catch (error) {
+          console.warn("Unable to save robot intro preference", error);
+          hideToday.checked = !hideToday.checked;
+          storageError.textContent = "설정을 저장하지 못했습니다. 브라우저 저장소 설정을 확인해 주세요.";
+        }
+      });
       const gateImage = intro.querySelector(".robot-intro__door--left img");
       const updateDoorSplit = () => {
         const { naturalWidth, naturalHeight } = gateImage;
